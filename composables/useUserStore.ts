@@ -6,6 +6,7 @@ export const useUserStore = defineStore("userInfo", {
       username: "",
       loggedIn: false,
       id: 0,
+      level: 0,
     };
   },
 });

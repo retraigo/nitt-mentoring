@@ -8,6 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     userStore.loggedIn = true;
     userStore.username = user.username;
     userStore.id = user.id;
+    userStore.level = user.level;
   } catch (e) {
     return navigateTo(`/login?redirect=${to.fullPath}`);
   }

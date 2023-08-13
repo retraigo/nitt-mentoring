@@ -7,7 +7,24 @@ export const MainMenu = [
     key: "mentees",
     toolTip: "Mentees",
     routeIcon: `${AllIcons.users}`,
-  },/*
+    level: 1,
+  },
+  {
+    name: "Faculty List",
+    action: "/hod/faculty",
+    key: "faculty",
+    toolTip: "Faculty List",
+    routeIcon: `${AllIcons.services}`,
+    level: 2,
+  },
+  {
+    name: "Student List",
+    action: "/hod/students",
+    key: "student",
+    toolTip: "Student List",
+    routeIcon: `${AllIcons.userplus}`,
+    level: 2,
+  }, /*
   {
     name: "Strategies",
     action: "/dashboard/strategies",

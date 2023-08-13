@@ -1,8 +1,6 @@
 import { Client } from "../../utils/database.js";
-import type { Meeting } from "../../../types/types.js";
 
 const client = new Client();
-
 export default defineEventHandler(async (e) => {
   const auth = getHeader(e, "Authorization");
   if (!auth || !auth.startsWith("Bearer ")) {
@@ -20,25 +18,30 @@ export default defineEventHandler(async (e) => {
         statusText: "Session expired. Please login again.",
       });
     }
-    const body = await readBody<Meeting>(e);
+    const regno = getRouterParam(e, "regno");
     if (
-      ["date", "discussion", "mentee_id"].some((k) => !Object.hasOwn(body, k))
+      Number(jwtPayload.level) < 2
     ) {
       throw createError({
-        statusCode: 400,
-        statusText: "Invalid Form Body",
+        statusCode: 401,
+        statusText: "You do not have permission.",
       });
     }
-    try {
-      await client.prisma.meetings.create({
-        data: { date: new Date(body.date), discussion: body.discussion, mentor_id: Number(jwtPayload.id), mentee_id: body.mentee_id },
+    const body = await readBody<{ mentor_id: number }>(e);
+    const mentor = await client.prisma.mentors.findFirst({
+      where: { user_id: body.mentor_id },
+    });
+    if (mentor) {
+      await client.prisma.mentees.update({
+        where: { regno: regno },
+        data: { mentor_id: body.mentor_id === -1 ? null : body.mentor_id },
       });
-      return { message: "Meeting recorded successfully!" };
-    } catch (err) {
-      console.log(err)
+      return {
+        message: "Successfully assigned mentor.",
+      };
+    } else {
       throw createError({
-        statusCode: 400,
-        statusText: "Invalid Form Body",
+        statusCode: 404,
       });
     }
   }

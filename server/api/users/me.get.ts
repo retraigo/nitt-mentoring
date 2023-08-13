@@ -11,9 +11,7 @@ export default defineEventHandler(async (e) => {
     });
   } else {
     const token = auth.slice(7);
-    console.log(token)
     const jwtPayload = await verifyJwt(token);
-    console.log(Date.now(), jwtPayload);
     if (!jwtPayload || (Date.now() / 1000) > jwtPayload.exp) {
       throw createError({
         statusCode: 401,
