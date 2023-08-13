@@ -1,0 +1,40 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model mentors {
+    password   String
+    user_name  String     @unique
+    user_id    Int        @id @default(autoincrement())
+    created_at DateTime   @default(now())
+    user_level Int        @default(1)
+    meetings   meetings[]
+    mentees    mentees[]
+}
+
+model mentees {
+    regno      String     @id
+    name       String
+    year       Int
+    section    String
+    batch      String
+    department String
+    mentor_id  Int?
+    mentor     mentors?    @relation(references: [user_id], fields: [mentor_id])
+    meetings   meetings[]
+}
+
+model meetings {
+    id         Int      @id @default(autoincrement())
+    date       DateTime
+    discussion String
+    mentee     mentees  @relation(references: [regno], fields: [mentee_id])
+    mentee_id  String
+    mentor     mentors  @relation(references: [user_id], fields: [mentor_id])
+    mentor_id  Int
+}
