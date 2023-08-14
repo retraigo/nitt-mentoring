@@ -3,8 +3,13 @@
         <InfoMentor v-if="faculty" :mentor="{ ...faculty, menteeCount: faculty.mentees.length }" />
         <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
             <div class="flex flex-col items-end gap-4">
-                <button class="bg-nitMaroon-600 text-white rounded-md p-2" @click="_ => expandFilter = !expandFilter">Filter
-                    {{ expandFilter ? `-` : `+` }}</button>
+                <div class="flex flex-row items-center gap-4">
+                    <button class="bg-green-600 text-white rounded-md p-2"
+                        @click="pushChanges">Commit Changes</button>
+                    <button class="bg-nitMaroon-600 text-white rounded-md p-2"
+                        @click="_ => expandFilter = !expandFilter">Filter
+                        {{ expandFilter ? `-` : `+` }}</button>
+                </div>
                 <div
                     :class="`${expandFilter ? `max-h-[90rem]` : `max-h-0`} flex flex-col lg:flex-row gap-2 overflow-y-hidden transition-all duration-500 ease-in-out`">
                     <input type="text" id="search_field" v-model="year"
@@ -34,7 +39,7 @@
                 <tr v-for="mentee in computedMentees" :key="mentee.regno"
                     class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
                     <td><input type="checkbox" :checked="mentee.mentor_id === Number(facultyId)"
-                            :disabled="Boolean(mentee.mentor_id && (mentee.mentor_id !== Number(facultyId)))"
+                            :disabled="Boolean(mentee.mentor_id && mentee.mentor_id !== -1 && (mentee.mentor_id !== Number(facultyId)))"
                             @change="e => updateMentor(e, mentee.regno)" /></td>
                     <td>{{ mentee.regno }}</td>
                     <td>{{ mentee.name }}</td>
@@ -62,27 +67,38 @@ const mentees = await useSudoMentee()
 if (!faculty) nextTick(() => router.go(-1))
 else mentees.sort((a, b) => a.mentor_id === faculty.id && b.mentor_id !== faculty.id ? -1 : a.mentor_id !== faculty.id && b.mentor_id === faculty.id ? 1 : 0)
 
-const timeOut = ref<NodeJS.Timeout | undefined>(undefined)
+const menteeMap = new Map<string, number>();
+
+mentees.forEach(mentee => menteeMap.set(mentee.regno, mentee.mentor_id));
+
+
 const updateMentor = async (e: Event, regno: string) => {
     const box = e.currentTarget as HTMLInputElement;
     const mentor_id = box.checked ? Number(facultyId) : -1
-    await useFetch<{ token: string }>(`/api/mentees/${regno}`, {
-        method: "PATCH", body: JSON.stringify({ mentor_id }),
-        headers: { "Authorization": `Bearer ${auth.value}` },
-        onResponse({ request, response, options }) {
-            message.value.type = "success"
-            message.value.text = `Mentor for ${regno} changed to ${mentor_id === -1 ? `None` : (faculty?.username || mentor_id)}!`
-            clearTimeout(timeOut.value)
-            timeOut.value = setTimeout(() => message.value.text = "", 3000)
-        },
-        onResponseError({ request, response, options }) {
-            box.checked = !box.checked;
-            message.value.type = "error"
-            message.value.text = `Unable to change mentor for ${regno}!`
-        }
-    })
+    menteeMap.set(regno, mentor_id);
 }
 
+const pushChanges = async () => {
+    let successes = 0;
+    for await (const [mtee, mtor] of menteeMap.entries()) {
+        if (mtor !== mentees.find(x => x.regno === mtee)?.mentor_id) {
+            await useFetch<{ token: string }>(`/api/mentees/${mtee}`, {
+                method: "PATCH", body: JSON.stringify({ mentor_id: mtor }),
+                headers: { "Authorization": `Bearer ${auth.value}` },
+                onResponse({ request, response, options }) {
+                    successes += 1;
+                },
+                onResponseError({ request, response, options }) {
+                    message.value.type = "error"
+                    message.value.text = `Unable to change mentor for ${mtee}!`
+                }
+            })
+        }
+    }
+    message.value.type = "success"
+    message.value.text = `Mentor for ${successes} students changed!`
+    setTimeout(() => router.go(0), 3000)
+}
 
 const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :
