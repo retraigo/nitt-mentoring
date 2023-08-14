@@ -18,12 +18,16 @@
                 <span class="uppercase font-bold">Section</span>
                 <span class="font-semibold">{{ mentee.section }}</span>
             </div>
+            <div class="grid grid-cols-2 max-w-xs">
+                <span class="uppercase font-bold">Mentor</span>
+                <span class="font-semibold">{{ mentee.mentor ? mentee.mentor.username : 'NA' }}</span>
+            </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import type { Mentee } from '@/utils/types.js';
+import type { Mentee, User } from '@/types/types.js';
 const { mentee } = defineProps<{
-    mentee: Mentee
+    mentee: Mentee & { mentor: User | null }
 }>()
 </script>

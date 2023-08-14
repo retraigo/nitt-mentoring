@@ -23,7 +23,7 @@
                     <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                         <th>Type</th>
                         <th>Name</th>
-                        <th>Edit</th>
+                        <th>Mentees</th>
                     </thead>
                     <tbody>
                         <tr v-for="mentor in computedmentors" :key="mentor.username"

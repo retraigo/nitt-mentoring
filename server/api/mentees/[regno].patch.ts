@@ -31,7 +31,7 @@ export default defineEventHandler(async (e) => {
     const mentor = await client.prisma.mentors.findFirst({
       where: { user_id: body.mentor_id },
     });
-    if (mentor) {
+    if (mentor || body.mentor_id === -1) {
       await client.prisma.mentees.update({
         where: { regno: regno },
         data: { mentor_id: body.mentor_id === -1 ? null : body.mentor_id },

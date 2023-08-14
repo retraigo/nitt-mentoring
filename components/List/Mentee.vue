@@ -46,11 +46,12 @@
                 </tr>
             </tbody>
         </table>
+        <div v-if="!computedMentees.length">No mentees found</div>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Mentee } from "@/types/mentee.js"
+import type { Mentee } from "@/types/types.js"
 const { mentees } = defineProps<{ mentees: Mentee[] }>()
 
 const computedMentees = computed(() => {

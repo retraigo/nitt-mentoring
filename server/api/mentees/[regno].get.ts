@@ -35,6 +35,9 @@ export default defineEventHandler(async (e) => {
       const meetings = await client.prisma.meetings.findMany({
         where: { mentee },
       });
+      const mentor = mentee.mentor_id ? await client.prisma.mentors.findMany({
+        where: { user_id: mentee.mentor_id },
+      }) : null;
       return {
         regno: mentee.regno,
         name: mentee.name,
@@ -42,7 +45,8 @@ export default defineEventHandler(async (e) => {
         section: mentee.section,
         batch: mentee.batch,
         department: mentee.department,
-        mentor: mentee.mentor_id,
+        mentor_id: mentee.mentor_id,
+        mentor: mentor,
         meetings: meetings,
       };
     } else {

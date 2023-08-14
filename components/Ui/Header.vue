@@ -24,7 +24,7 @@
                                 stroke-linejoin="round" :d="`${route.routeIcon}`" />
                         </svg>
                         <span
-                            :class="`font-semibold hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
+                            :class="`font-semibold truncate hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
                             {{ route.name }}
                         </span>
                     </NuxtLink>
@@ -38,7 +38,7 @@
                             stroke-linejoin="round" :d="`${AllIcons.logout}`" />
                     </svg>
                     <span
-                        :class="`font-semibold hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
+                        :class="`font-semibold truncate hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
                         Sign Out
                     </span>
                 </button>
@@ -51,7 +51,7 @@
                             stroke-linejoin="round" :d="`${AllIcons.login}`" />
                     </svg>
                     <span
-                        :class="`font-semibold hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
+                        :class="`font-semibold truncate hover:text-nitMaroon-300 transition-all duration-200 ease-in-out overflow-hidden ${navState ? `max-w-lg` : `max-w-0`}`">
                         Sign In
                     </span>
                 </NuxtLink>

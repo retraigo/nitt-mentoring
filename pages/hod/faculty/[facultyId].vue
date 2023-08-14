@@ -19,6 +19,8 @@
                 </div>
             </div>
         </div>
+        <MiscMessage :class="`${message.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out`" :type="message.type">
+            {{ message.text }}</MiscMessage>
         <table class="table-auto border-collapse w-full max-w-sm lg:max-w-full">
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Assigned</th>
@@ -66,11 +68,14 @@ const updateMentor = async (e: Event, regno: string) => {
         method: "PATCH", body: JSON.stringify({ mentor_id }),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            alert(`Changed ${regno}'s mentor to ${faculty ? faculty.username : ''}`);
+            message.value.type="success"
+            message.value.text = `Mentor for ${regno} changed to ${mentor_id === -1 ? `None` : (faculty?.username || mentor_id)}!`
+            setTimeout(() => message.value.text = "", 3000)
         },
         onResponseError({ request, response, options }) {
-            alert(`Couldn't change ${regno}'s mentor to ${faculty ? faculty.username : ''}`);
-            box.checked = false;
+            box.checked = !box.checked;
+            message.value.type="error"
+            message.value.text = `Unable to change mentor for ${regno}!`
         }
     })
 }
@@ -91,4 +96,6 @@ const search = ref("")
 const year = ref("")
 const classSection = ref("")
 const expandFilter = ref(false)
+
+const message = ref({ text: "", type: 'success' })
 </script>
