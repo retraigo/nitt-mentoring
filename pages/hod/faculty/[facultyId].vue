@@ -91,6 +91,7 @@ const pushChanges = async () => {
                 onResponseError({ request, response, options }) {
                     message.value.type = "error"
                     message.value.text = `Unable to change mentor for ${mtee}!`
+                    successes -= 1;
                 }
             })
         }
