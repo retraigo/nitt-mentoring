@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-2">
-        <InfoMentor v-if="faculty" :mentor="faculty" />
+        <InfoMentor v-if="faculty" :mentor="{ ...faculty, menteeCount: faculty.mentees.length }" />
         <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
             <div class="flex flex-col items-end gap-4">
                 <button class="bg-nitMaroon-600 text-white rounded-md p-2" @click="_ => expandFilter = !expandFilter">Filter
@@ -19,7 +19,8 @@
                 </div>
             </div>
         </div>
-        <MiscMessage :class="`${message.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out`" :type="message.type">
+        <MiscMessage :class="`${message.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out`"
+            :type="message.type">
             {{ message.text }}</MiscMessage>
         <table class="table-auto border-collapse w-full max-w-sm lg:max-w-full">
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
@@ -61,6 +62,7 @@ const mentees = await useSudoMentee()
 if (!faculty) nextTick(() => router.go(-1))
 else mentees.sort((a, b) => a.mentor_id === faculty.id && b.mentor_id !== faculty.id ? -1 : a.mentor_id !== faculty.id && b.mentor_id === faculty.id ? 1 : 0)
 
+const timeOut = ref<NodeJS.Timeout | undefined>(undefined)
 const updateMentor = async (e: Event, regno: string) => {
     const box = e.currentTarget as HTMLInputElement;
     const mentor_id = box.checked ? Number(facultyId) : -1
@@ -68,13 +70,14 @@ const updateMentor = async (e: Event, regno: string) => {
         method: "PATCH", body: JSON.stringify({ mentor_id }),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            message.value.type="success"
+            message.value.type = "success"
             message.value.text = `Mentor for ${regno} changed to ${mentor_id === -1 ? `None` : (faculty?.username || mentor_id)}!`
-            setTimeout(() => message.value.text = "", 3000)
+            clearTimeout(timeOut.value)
+            timeOut.value = setTimeout(() => message.value.text = "", 3000)
         },
         onResponseError({ request, response, options }) {
             box.checked = !box.checked;
-            message.value.type="error"
+            message.value.type = "error"
             message.value.text = `Unable to change mentor for ${regno}!`
         }
     })

@@ -9,4 +9,9 @@ export const useUserStore = defineStore("userInfo", {
       level: 0,
     };
   },
+  actions: {
+    signOut() {
+      this.loggedIn = false;
+    },
+  },
 });

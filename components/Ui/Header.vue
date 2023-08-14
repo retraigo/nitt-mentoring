@@ -15,7 +15,8 @@
                 }`">
                 <div v-if="userStore.loggedIn" class="flex flex-col gap-8">
                     <div class="mt-8" />
-                    <NuxtLink v-for="route in MainMenu.filter(x => x.level <= userStore.level)" :to="route.action" :key="route.key"
+                    <NuxtLink v-for="route in MainMenu.filter(x => x.level <= userStore.level)" :to="route.action"
+                        :key="route.key"
                         :class="`flex flex-row items-center gap-2 transition duration-200 ease-in-out border-b-2 border-transparent ${navState ? `hover:border-nitMaroon-300` : `justify-center w-full`}`"
                         :title="route.toolTip">
                         <svg class="block w-5 h-5 stroke-2" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fccef1"
@@ -31,7 +32,8 @@
                 </div>
                 <!-- If logged in -->
                 <button v-if="userStore.loggedIn" title="Logout"
-                    :class="`flex flex-row items-center gap-2 transition duration-200 ease-in-out border-b-2 border-transparent ${navState ? `hover:border-nitMaroon-300` : `justify-center w-full`}`">
+                    :class="`flex flex-row items-center gap-2 transition duration-200 ease-in-out border-b-2 border-transparent ${navState ? `hover:border-nitMaroon-300` : `justify-center w-full`}`"
+                    @click="signOut">
                     <svg class="block w-5 h-5 stroke-2" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#fccef1"
                         viewBox="0 0 24 24" aria-hidden="true">
                         <path class="transition-all duration-500 transform ease-in-out" stroke-linecap="round"
@@ -63,4 +65,10 @@
 const navState = ref(false)
 const route = useRoute()
 const userStore = useUserStore()
+const auth = useCookie<string>("nitt_token")
+const signOut = () => {
+    auth.value = ""
+    userStore.signOut()
+    navigateTo("/login")
+}
 </script>
