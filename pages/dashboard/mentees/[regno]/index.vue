@@ -3,7 +3,8 @@
         <InfoMentee v-if="mentee" :mentee="mentee" />
         <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
             <div class="flex flex-col items-end gap-4">
-                <NuxtLink v-if="mentee" :to="`/dashboard/mentees/${mentee.regno}/meetings/new`"
+                <NuxtLink v-if="mentee && mentee.mentor_id == userStore.id"
+                    :to="`/dashboard/mentees/${mentee.regno}/meetings/new`"
                     class="bg-nitMaroon-600 text-white rounded-md p-2">
                     New Meeting</NuxtLink>
             </div>
@@ -62,6 +63,7 @@ definePageMeta({
         "level1"
     ]
 })
+const userStore = useUserStore()
 const route = useRoute();
 
 const regno = route.params.regno as string;

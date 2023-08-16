@@ -25,6 +25,7 @@ export default defineEventHandler(async (e) => {
       return {
         username: user.user_name,
         level: user.user_level,
+        id: user.user_id
       };
     } else {
       // This shouldn't happen

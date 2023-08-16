@@ -24,6 +24,9 @@
                         Forgot Password?
                     </a>
                 </div>
+                <MiscMessage :class="`${message.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                    :type="message.type">
+                    {{ message.text }}</MiscMessage>
                 <button type="submit"
                     class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
                     Log In
@@ -44,6 +47,8 @@ let redirect = route.query.redirect as string;
 // Else
 if (!redirect) redirect = "/dashboard"
 
+const message = ref({ type: "error", text: "" })
+
 const handleSubmit = async (e: Event) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -57,10 +62,28 @@ const handleSubmit = async (e: Event) => {
         onResponse({ request, response, options }) {
             // Set localStorage value and redirect to where they were
             token.value = response._data.token
+            message.value.type = "info"
+            message.value.text = "Logging you in."
             navigateTo(redirect)
         },
         onResponseError({ request, response, options }) {
-            alert("An error occurred")
+            message.value.type="error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    message.value.text = "Missing Fields."
+                case 401:
+                    message.value.text = "Username / Password combination is incorrect."
+                    break;
+                case 404:
+                    message.value.text = "No such user exists."
+                    break;
+                default:
+                    message.value.text = "An unknown error occurred";
+                    break;
+            }
+            abortNavigation()
+
         }
     })
 };

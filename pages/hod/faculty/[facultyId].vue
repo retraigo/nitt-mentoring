@@ -4,8 +4,7 @@
         <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
             <div class="flex flex-col items-end gap-4">
                 <div class="flex flex-row items-center gap-4">
-                    <button class="bg-green-600 text-white rounded-md p-2"
-                        @click="pushChanges">Commit Changes</button>
+                    <button class="bg-green-600 text-white rounded-md p-2" @click="pushChanges">Commit Changes</button>
                     <button class="bg-nitMaroon-600 text-white rounded-md p-2"
                         @click="_ => expandFilter = !expandFilter">Filter
                         {{ expandFilter ? `-` : `+` }}</button>
@@ -32,8 +31,8 @@
                 <th>Assigned</th>
                 <th>Reg #</th>
                 <th>Name</th>
-                <th>Year</th>
-                <th>Section</th>
+                <th>Year & Section</th>
+                <th>Mentor</th>
             </thead>
             <tbody>
                 <tr v-for="mentee in computedMentees" :key="mentee.regno"
@@ -43,8 +42,8 @@
                             @change="e => updateMentor(e, mentee.regno)" /></td>
                     <td>{{ mentee.regno }}</td>
                     <td>{{ mentee.name }}</td>
-                    <td>{{ mentee.year }}</td>
-                    <td>{{ mentee.section }}</td>
+                    <td>{{ mentee.year }} - {{ mentee.section }}</td>
+                    <td>{{ mentee.mentor?.username }}</td>
                 </tr>
             </tbody>
         </table>
@@ -63,7 +62,9 @@ const route = useRoute()
 const router = useRouter()
 const facultyId = route.params.facultyId;
 const faculty = await useSudoUser(Number(facultyId))
-const mentees = await useSudoMentee()
+const faculties = await useUsers()
+
+const mentees = (await useSudoMentee()).map(mentee => ({ ...mentee, mentor: faculties.find(faculty => faculty.id === mentee.mentor_id) || {username: "Not Assigned"} }))
 if (!faculty) nextTick(() => router.go(-1))
 else mentees.sort((a, b) => a.mentor_id === faculty.id && b.mentor_id !== faculty.id ? -1 : a.mentor_id !== faculty.id && b.mentor_id === faculty.id ? 1 : 0)
 

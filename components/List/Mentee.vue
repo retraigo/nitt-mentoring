@@ -22,8 +22,8 @@
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Reg #</th>
                 <th>Name</th>
-                <th>Year</th>
-                <th>Section</th>
+                <th>Year & Section</th>
+                <th v-if="mentees[0].mentor">Mentor</th>
                 <th>Meetings</th>
             </thead>
             <tbody>
@@ -31,8 +31,8 @@
                     class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
                     <td>{{ mentee.regno }}</td>
                     <td>{{ mentee.name }}</td>
-                    <td>{{ mentee.year }}</td>
-                    <td>{{ mentee.section }}</td>
+                    <td>{{ mentee.year }} - {{ mentee.section }}</td>
+                    <td v-if="mentee.mentor">{{ mentee.mentor.username }}</td>
                     <td>
                         <NuxtLink :to="`/dashboard/mentees/${mentee.regno}`"> <span class="sr-only">Check Meeting
                                 Details</span>
@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Mentee } from "@/types/types.js"
-const { mentees } = defineProps<{ mentees: Mentee[] }>()
+import type { Mentee, User } from "@/types/types.js"
+const { mentees } = defineProps<{ mentees: (Mentee & { mentor?: User })[] }>()
 
 const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :

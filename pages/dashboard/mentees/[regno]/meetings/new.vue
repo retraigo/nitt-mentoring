@@ -4,9 +4,10 @@
         <form v-if="mentee" @submit="addMeeting"
             class="flex flex-col lg:mx-auto lg:items-center gap-2 p-2 rounded-md bg-zinc-200 max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-6xl shadow-md w-full">
             <h1 class="text-2xl font-bold uppercase">New Meeting</h1>
-            <input type="date" name="date_field" class="rounded-md w-48 lg:w-72" />
+            <input type="date" name="date_field" :max="new Date().toISOString().split(`T`)[0]"
+                class="p-2 rounded-md w-48 lg:w-72" />
             <h2 class="text-xl font-bold">Discussion:</h2>
-            <textarea name="discussion_field" class="rounded-md w-48 lg:w-72" />
+            <textarea name="discussion_field" class="p-2 rounded-md w-48 lg:w-72" />
             <button type="submit" class="bg-nitMaroon-600 text-white rounded-md p-2 w-12">Add</button>
         </form>
     </div>

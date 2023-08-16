@@ -1,11 +1,8 @@
 <template>
     <div class="p-2 flex flex-col items-center w-full mt-12">
-        <div
-            class="p-4 flex flex-col items-center gap-4 bg-nitMaroon-100 border-stone-400 border-b border-r shadow-xl rounded-xl w-full">
+        <h1 class="text-2xl uppercase font-bold w-full text-left">All Faculty</h1>
+        <div class="p-4 flex flex-col items-center gap-4 w-full">
             <div class="flex flex-col items-center gap-2 w-full">
-                <div class="w-full text-start">
-                    Welcome, {{ useStore.username }}!
-                </div>
                 <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
                     <div class="flex flex-col items-end gap-4">
                         <button class="bg-nitMaroon-600 text-white rounded-md p-2"

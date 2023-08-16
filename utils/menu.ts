@@ -2,6 +2,14 @@ import { AllIcons } from "./icons.js";
 
 export const MainMenu = [
   {
+    name: "Dashboard",
+    action: "/dashboard/",
+    key: "dashboard",
+    toolTip: "Dashboard",
+    routeIcon: `${AllIcons.home}`,
+    level: 1,
+  },
+  {
     name: "Mentees",
     action: "/dashboard/mentees",
     key: "mentees",
