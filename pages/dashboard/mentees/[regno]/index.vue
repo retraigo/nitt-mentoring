@@ -37,7 +37,7 @@
             <tbody>
                 <tr v-for="meeting in meetings" :key="`meeting_${meeting.id}`"
                     class="text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
-                    <td>{{ meeting.id }}</td>
+                    <td>{{ meeting.i }}</td>
                     <td>{{ new Date(meeting.date).toISOString().split("T")[0] }}</td>
                     <td>{{ meeting.discussion }}</td>
                     <td>
@@ -78,6 +78,7 @@ if (!mentee) {
         navigateTo("/dashboard")
     })
 } else {
-    meetings.value = mentee.meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    meetings.value = mentee.meetings.sort((a, b) => a.id - b.id).map((x, i) => ({...x, i: i+1})).reverse();
+    //  meetings.value = mentee.meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 </script>
