@@ -1,6 +1,7 @@
 export type User = {
   username: string;
   id: number;
+  department: number;
   level: number;
 };
 
@@ -10,7 +11,7 @@ export type Mentee = {
   year: number;
   section: string;
   batch: string;
-  department: string;
+  department: number;
   mentor_id: number;
 };
 

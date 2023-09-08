@@ -30,8 +30,32 @@ export const MainMenu = [
     action: "/hod/students",
     key: "student",
     toolTip: "Student List",
+    routeIcon: `${AllIcons.book}`,
+    level: 2,
+  },
+  {
+    name: "Add Students",
+    action: "/admin/students/new",
+    key: "studentadd",
+    toolTip: "Add Students",
     routeIcon: `${AllIcons.userplus}`,
     level: 2,
+  },
+  {
+    name: "Add Faculty",
+    action: "/admin/faculty/new",
+    key: "facultyadd",
+    toolTip: "Add Faculty",
+    routeIcon: `${AllIcons.userplus}`,
+    level: 3,
+  },
+  {
+    name: "Edit Faculty",
+    action: "/admin/faculty/edit",
+    key: "facultyedit",
+    toolTip: "Edit Faculty",
+    routeIcon: `${AllIcons.userplus}`,
+    level: 3,
   }, /*
   {
     name: "Strategies",

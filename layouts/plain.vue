@@ -10,7 +10,7 @@
                         <h1 class="text-lg lg:text-2xl font-bold">National Institute of Technology Tiruchirappalli</h1>
                     </div>
                 </section>
-                <section class="px-4">
+                <section class="flex-grow px-4">
                     <slot />
                 </section>
 

@@ -5,6 +5,7 @@ export const useUserStore = defineStore("userInfo", {
     return {
       username: "",
       loggedIn: false,
+      department: 0,
       id: 0,
       level: 0,
     };

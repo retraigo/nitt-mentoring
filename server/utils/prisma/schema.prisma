@@ -8,25 +8,35 @@ generator client {
 }
 
 model mentors {
-    password   String
-    user_name  String     @unique
-    user_id    Int        @id @default(autoincrement())
-    created_at DateTime   @default(now())
-    user_level Int        @default(1)
-    meetings   meetings[]
-    mentees    mentees[]
+    password      String
+    user_name     String     @unique
+    user_id       Int        @id @default(autoincrement())
+    created_at    DateTime   @default(now())
+    user_level    Int        @default(1)
+    department    department @relation(references: [id], fields: [department_id])
+    meetings      meetings[]
+    mentees       mentees[]
+    department_id Int
+}
+
+model department {
+    name     String
+    id       Int       @id @default(autoincrement())
+    faculty  mentors[]
+    students mentees[]
 }
 
 model mentees {
-    regno      String     @id
-    name       String
-    year       Int
-    section    String
-    batch      String
-    department String
-    mentor_id  Int?
-    mentor     mentors?    @relation(references: [user_id], fields: [mentor_id])
-    meetings   meetings[]
+    regno         String     @id
+    name          String
+    year          Int
+    section       String
+    batch         String
+    department    department @relation(references: [id], fields: [department_id])
+    mentor_id     Int?
+    mentor        mentors?   @relation(references: [user_id], fields: [mentor_id])
+    meetings      meetings[]
+    department_id Int
 }
 
 model meetings {

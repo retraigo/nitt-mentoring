@@ -45,13 +45,15 @@ export default defineEventHandler(async (e) => {
       Number(process.env.BCRYPT_SALT),
     );
     try {
-      await client.prisma.mentors.create({
-        data: {
+      const user = await client.prisma.mentors.update({
+        where: {
           user_name: body.username,
+        },
+        data: {
           password: encryptedPass,
-          user_level: 3,
         },
       });
+
       return { message: "Account created successfully!" };
     } catch (err) {
       if (err instanceof Error) {

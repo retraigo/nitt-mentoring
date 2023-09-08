@@ -23,6 +23,9 @@
 <script setup lang="ts">
 const academicYear = ref("NONE")
 const userStore = useUserStore()
+if(userStore.level === 3) {
+    navigateTo("/admin")
+}
 definePageMeta({
     middleware: [
         "level1"
