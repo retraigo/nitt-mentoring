@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  nitt-mentoring:
+    container_name: nitt-mentoring
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "1920:1920"
