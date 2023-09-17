@@ -33,6 +33,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: List files
+        run: ls | echo
+
       - name: Release
         uses: softprops/action-gh-release@master
         env:
