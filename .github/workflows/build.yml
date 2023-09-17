@@ -33,6 +33,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: "release draft"
+          draft: true
           files: |
             nitt-mentoring.tar
         env:
