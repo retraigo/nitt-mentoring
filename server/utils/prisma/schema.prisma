@@ -8,53 +8,163 @@ generator client {
 }
 
 model users {
-    id       Int      @id @default(autoincrement())
-    level    Int      @default(0)
+    id       Int       @id @default(autoincrement())
+    // 0 - student
+    // 1 - faculty
+    // 2 - hod
+    // 3 - admin
+    level    Int       @default(0)
     username String
     password String
-    mentor  mentors?
-    mentee  mentees?
+    mentor   faculty?
+    mentee   students?
 }
 
-model mentors {
-    id           Int         @id @default(autoincrement())
-    user         users       @relation(references: [id], fields: [user_id])
-    user_id      Int         @unique
-    mentees      mentees[]
-    department   department? @relation(fields: [departmentId], references: [id])
-    departmentId Int?
-    meetings     meetings[]
-}
-
-model mentees {
-    id            Int        @id @default(autoincrement())
-    user          users      @relation(references: [id], fields: [user_id])
-    user_id       Int        @unique
-    regno         String     @unique
-    name          String
-    year          Int
-    section       String
-    batch         String
-    department    department @relation(references: [id], fields: [department_id])
-    mentor_id     Int?
-    mentor        mentors?   @relation(references: [user_id], fields: [mentor_id])
+model faculty {
+    id            Int         @id @default(autoincrement())
+    user          users       @relation(references: [id], fields: [user_id])
+    user_id       Int         @unique
+    mentees       students[]
+    department    department? @relation(fields: [department_id], references: [id])
+    department_id String
     meetings      meetings[]
-    department_id Int
+}
+
+model students {
+    id          Int    @id @default(autoincrement())
+    user        users  @relation(references: [id], fields: [user_id])
+    user_id     Int    @unique
+    register_no String @unique
+    name        String
+    year        Int
+    section     String
+    batch       Int
+
+    // To be filled by student
+    gender          String?
+    period_of_study String?
+    blood_group     String?
+    mobile_number   String?
+    whatsapp_number String?
+    date_of_birth   DateTime?
+    email_id        String?
+
+    // Father Info
+    f_name            String?
+    f_occupation      String?
+    f_mobile_number   String?
+    f_whatsapp_number String?
+    f_email_id        String?
+    f_address         String?
+
+    // Mother Info
+    m_name            String?
+    m_occupation      String?
+    m_mobile_number   String?
+    m_whatsapp_number String?
+    m_email_id        String?
+    m_address         String?
+
+    // Past Academic Info
+    sslc_board       String?
+    sslc_institution String?
+    sslc_percentage  String?
+    sslc_years       String?
+    hsc_board        String?
+    hsc_institution  String?
+    hsc_percentage   String?
+    hsc_years        String?
+    jee_rank         Int?
+    jee_score        Int?
+
+    // Achievements
+    positions_of_responsibility String?
+    scholarships                String?
+    competitions                String?
+    special_talents             String?
+    role_model                  String?
+    objectives                  String?
+    extra_curricular            String?
+
+    // Filled later
+    reassessment_info String?
+    placement_studies String?
+    student_comments  String?
+
+    // Academic
+    academics academics[]
+
+    // Relations
+    department    department @relation(references: [id], fields: [department_id])
+    department_id String
+    mentor_id     Int?
+    mentor        faculty?   @relation(references: [user_id], fields: [mentor_id])
+    meetings      meetings[]
+}
+
+model academics {
+    id                   Int      @id @default(autoincrement())
+    student              students @relation(references: [register_no], fields: [register_no])
+    year                 Int
+    register_no          String
+    special              String?
+    academics            String?
+    clubs                String?
+    disciplinary_actions String?  @default("None")
+    os_sem               Int
+    os_academic_year     String?
+    os_hostel            String?
+    os_subject_1_name    String?
+    os_subject_1_grade   String?
+    os_subject_2_name    String?
+    os_subject_2_grade   String?
+    os_subject_3_name    String?
+    os_subject_3_grade   String?
+    os_subject_4_name    String?
+    os_subject_4_grade   String?
+    os_subject_5_name    String?
+    os_subject_5_grade   String?
+    os_subject_6_name    String?
+    os_subject_6_grade   String?
+    os_subject_7_name    String?
+    os_subject_7_grade   String?
+    os_subject_8_name    String?
+    os_subject_8_grade   String?
+    os_subject_9_name    String?
+    os_subject_9_grade   String?
+    es_subject_1_name    String?
+    es_subject_1_grade   String?
+    es_subject_2_name    String?
+    es_subject_2_grade   String?
+    es_subject_3_name    String?
+    es_subject_3_grade   String?
+    es_subject_4_name    String?
+    es_subject_4_grade   String?
+    es_subject_5_name    String?
+    es_subject_5_grade   String?
+    es_subject_6_name    String?
+    es_subject_6_grade   String?
+    es_subject_7_name    String?
+    es_subject_7_grade   String?
+    es_subject_8_name    String?
+    es_subject_8_grade   String?
+    es_subject_9_name    String?
+    es_subject_9_grade   String?
 }
 
 model meetings {
     id         Int      @id @default(autoincrement())
     date       DateTime
     discussion String
-    mentee     mentees  @relation(references: [regno], fields: [mentee_id])
+    mentee     students @relation(references: [register_no], fields: [mentee_id])
     mentee_id  String
-    mentor     mentors  @relation(references: [user_id], fields: [mentor_id])
+    mentor     faculty  @relation(references: [user_id], fields: [mentor_id])
     mentor_id  Int
 }
 
 model department {
     name     String
-    id       Int       @id @default(autoincrement())
-    faculty  mentors[]
-    students mentees[]
+    id       String     @id
+    faculty  faculty[]
+    students students[]
 }
