@@ -6,6 +6,7 @@ const client = new Client();
 type UserCreds = {
   username: string;
   password: string;
+  level: number
 };
 
 export default defineEventHandler(async (e) => {
@@ -45,14 +46,14 @@ export default defineEventHandler(async (e) => {
       Number(process.env.BCRYPT_SALT),
     );
     try {
-      await client.prisma.mentors.create({
+      const user = await client.prisma.users.create({
         data: {
-          user_name: body.username,
+          username: body.username,
           password: encryptedPass,
-          user_level: 3,
+          level: Math.min(Math.abs(body.level), 3),
         },
       });
-      return { message: "Account created successfully!" };
+      return { message: "Account created successfully!", id: user.id };
     } catch (err) {
       if (err instanceof Error) {
         if (err.name === "PrismaClientKnownRequestError") {

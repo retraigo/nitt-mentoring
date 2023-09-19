@@ -21,6 +21,7 @@ export default defineEventHandler(async (e) => {
     const meetingId = getRouterParam(e, "meetingId");
     const meeting = await client.prisma.meetings.findFirst({
       where: { id: Number(meetingId) },
+      include: {mentee: true, mentor: true}
     });
     if (meeting) {
       if (
@@ -32,24 +33,7 @@ export default defineEventHandler(async (e) => {
           statusText: "You do not have permission.",
         });
       }
-      const mentee = await client.prisma.mentees.findFirst({
-        where: { regno: meeting.mentee_id },
-      });
-      return {
-        id: meeting.id,
-        date: meeting.date,
-        discussion: meeting.discussion,
-        mentee: {
-          regno: mentee?.regno || "",
-          name: mentee?.name || "",
-          year: mentee?.year || -1,
-          section: mentee?.section || "",
-          batch: mentee?.batch || "",
-          department: mentee?.department || "",
-          mentor: mentee?.mentor_id || 0,
-        },
-        mentor: meeting.mentor_id,
-      };
+      return client.manager.createMeeting(meeting);
     } else {
       throw createError({
         statusCode: 404,

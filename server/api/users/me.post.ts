@@ -15,8 +15,8 @@ export default defineEventHandler(async (e) => {
       statusText: "Invalid Form Body",
     });
   }
-  const user = await client.prisma.mentors.findFirst({
-    where: { user_name: body.username },
+  const user = await client.prisma.users.findFirst({
+    where: { username: body.username },
   });
 
   if (!user) {
@@ -28,7 +28,7 @@ export default defineEventHandler(async (e) => {
 
   const equal = await compare(body.password, user.password);
   if (equal) {
-    const token = await createJwt(`${user.user_id}`, user.user_level);
+    const token = await createJwt(`${user.id}`, user.level);
     return { message: "Successfully logged in.", token };
   } else {
     throw createError({

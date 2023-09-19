@@ -1,15 +1,15 @@
-import type { Meeting, Mentee, User } from "@/types/types.js";
+import type { Student } from "@/types/types.js";
 
-export async function useMentee(): Promise<Mentee[]>;
+export async function useMentee(): Promise<Student[]>;
 export async function useMentee(
   regno: string,
-): Promise<(Mentee & { meetings: Meeting[], mentor: User | null }) | false>;
+): Promise<Student | false>;
 export async function useMentee(regno?: string) {
   const auth = useCookie<string>("nitt_token");
   if (!auth.value) return false;
   if (regno) {
     try {
-      const user = await $fetch<Mentee & { meetings: Meeting[] }>(
+      const user = await $fetch<Student>(
         `/api/mentees/${regno}`,
         {
           method: "GET",
@@ -21,7 +21,7 @@ export async function useMentee(regno?: string) {
       return false;
     }
   } else {
-    const users = await $fetch<Mentee[]>(`/api/mentees/me`, {
+    const users = await $fetch<Student[]>(`/api/mentees/me`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
@@ -29,16 +29,16 @@ export async function useMentee(regno?: string) {
   }
 }
 
-export async function useSudoMentee(): Promise<Mentee[]>;
+export async function useSudoMentee(): Promise<Student[]>;
 export async function useSudoMentee(
   regno: string,
-): Promise<(Mentee & { meetings: Meeting[], mentor: User | null }) | false>;
+): Promise<Student | false>;
 export async function useSudoMentee(regno?: string) {
   const auth = useCookie<string>("nitt_token");
   if (!auth.value) return false;
   if (regno) {
     try {
-      const user = await $fetch<Mentee & { meetings: Meeting[], mentor: User | null }>(
+      const user = await $fetch<Student>(
         `/api/mentees/${regno}`,
         {
           method: "GET",
@@ -50,7 +50,7 @@ export async function useSudoMentee(regno?: string) {
       return false;
     }
   } else {
-    const users = await $fetch<Mentee[]>(`/api/mentees/all`, {
+    const users = await $fetch<Student[]>(`/api/mentees/all`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });

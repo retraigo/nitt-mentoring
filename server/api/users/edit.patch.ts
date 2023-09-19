@@ -45,9 +45,9 @@ export default defineEventHandler(async (e) => {
       Number(process.env.BCRYPT_SALT),
     );
     try {
-      const user = await client.prisma.mentors.update({
+      const user = await client.prisma.users.update({
         where: {
-          user_name: body.username,
+          username: body.username,
         },
         data: {
           password: encryptedPass,

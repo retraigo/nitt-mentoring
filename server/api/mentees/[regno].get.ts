@@ -19,8 +19,12 @@ export default defineEventHandler(async (e) => {
       });
     }
     const regno = getRouterParam(e, "regno");
-    const mentee = await client.prisma.mentees.findFirst({
-      where: { regno: regno },
+    const mentee = await client.prisma.students.findFirst({
+      where: { register_no: regno },
+      include: {
+        meetings: true,
+        mentor: true
+      }
     });
     if (mentee) {
       if (
@@ -32,25 +36,7 @@ export default defineEventHandler(async (e) => {
           statusText: "You do not have permission.",
         });
       }
-      const meetings = await client.prisma.meetings.findMany({
-        where: { mentee },
-      });
-      const mentor = mentee.mentor_id
-        ? await client.prisma.mentors.findFirst({
-          where: { user_id: mentee.mentor_id },
-        })
-        : null;
-      return {
-        regno: mentee.regno,
-        name: mentee.name,
-        year: mentee.year,
-        section: mentee.section,
-        batch: mentee.batch,
-        department: mentee.department,
-        mentor_id: mentee.mentor_id,
-        mentor: mentor ? { username: mentor.user_name, id: mentor.user_id } : null,
-        meetings: meetings,
-      };
+      return client.manager.createStudent(mentee);
     } else {
       throw createError({
         statusCode: 404,

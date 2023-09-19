@@ -1,4 +1,4 @@
-import type { Mentee, User } from "@/types/types.js";
+import type { Faculty, User } from "@/types/types.js";
 
 export async function useUser() {
   const auth = useCookie<string>("nitt_token");
@@ -11,11 +11,11 @@ export async function useUser() {
   return user;
 }
 
-export async function useSudoUser(id: number) {
+export async function useFaculty(id: number) {
   const auth = useCookie<string>("nitt_token");
   if (!auth.value) return false;
 
-  const user = await $fetch<User & { mentees: Mentee[] }>(`/api/users/${id}`, {
+  const user = await $fetch<User>(`/api/faculty/${id}`, {
     method: "GET",
     headers: { "Authorization": `Bearer ${auth.value}` },
   });

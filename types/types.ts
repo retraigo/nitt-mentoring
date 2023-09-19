@@ -2,16 +2,15 @@ export type User =
   & { id: number; username: string; password: string }
   & ({
     level: 0;
-    mentee: Mentee;
+    mentee: Student;
   } | {
     level: 1;
-    mentor: Mentor;
+    mentor: Faculty;
   } | {
     level: 2;
-    mentor: Mentor;
+    mentor: Faculty;
   } | {
     level: 3;
-    mentor: Mentor;
   });
 
 export type Department = {
@@ -19,26 +18,30 @@ export type Department = {
   id: string;
 };
 
-export type MentorInfo = {
+export type FacultyInfo = {
   id: number;
   name: string;
   department: Department;
 };
-export type Mentor = MentorInfo & {
+export type Faculty = FacultyInfo & {
   id: number;
   name: string;
   department: Department;
-  mentees: Mentee[];
+  mentees: PartialStudent[];
 };
 
-export type Mentee = {
+export type PartialStudent = {
   register_number: string;
   name: string;
   year: number;
   section: string;
   batch: number;
   department: Department;
-  mentor: MentorInfo;
+  mentor_id?: number;
+};
+
+export type Student = PartialStudent & {
+  mentor: FacultyInfo;
   personal_info: Partial<{
     blood_group: string;
     mobile_number: string;
@@ -114,6 +117,6 @@ export type Meeting = {
   id: number;
   date: Date;
   discussion: string;
-  mentee: Mentee;
-  mentor: MentorInfo;
+  mentee: PartialStudent;
+  mentor: FacultyInfo;
 };

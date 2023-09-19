@@ -18,14 +18,15 @@ export default defineEventHandler(async (e) => {
         statusText: "Session expired. Please login again.",
       });
     }
-    const user = await client.prisma.mentors.findFirst({
+    const user = await client.prisma.faculty.findFirst({
       where: { user_id: Number(jwtPayload.id) },
+      include: { user: true },
     });
     if (user) {
       return {
-        username: user.user_name,
-        level: user.user_level,
-        id: user.user_id
+        username: user.user.username,
+        level: user.user.level,
+        id: user.user.id,
       };
     } else {
       // This shouldn't happen

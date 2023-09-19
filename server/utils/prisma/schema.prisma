@@ -1,5 +1,5 @@
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
@@ -14,7 +14,7 @@ model users {
     // 2 - hod
     // 3 - admin
     level    Int       @default(0)
-    username String
+    username String    @unique
     password String
     mentor   faculty?
     mentee   students?
@@ -22,6 +22,7 @@ model users {
 
 model faculty {
     id            Int         @id @default(autoincrement())
+    name          String
     user          users       @relation(references: [id], fields: [user_id])
     user_id       Int         @unique
     mentees       students[]
@@ -132,6 +133,9 @@ model academics {
     os_subject_8_grade   String?
     os_subject_9_name    String?
     os_subject_9_grade   String?
+    es_sem               Int
+    es_academic_year     String?
+    es_hostel            String?
     es_subject_1_name    String?
     es_subject_1_grade   String?
     es_subject_2_name    String?

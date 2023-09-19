@@ -1,5 +1,5 @@
+import { hash } from "bcrypt";
 import { Client } from "../../utils/database.js";
-import type { Mentee } from "../../../types/types.js";
 
 const client = new Client();
 
@@ -26,20 +26,44 @@ export default defineEventHandler(async (e) => {
         statusText: "You do not have permission.",
       });
     }
-    const body = await readBody<Mentee>(e);
+    const body = await readBody<
+      {
+        regno: string;
+        name: string;
+        year: number;
+        section: string;
+        batch: number;
+        department: string;
+        password: string;
+      }
+    >(e);
     if (
-      ["regno", "name", "year", "section", "batch", "department"].some((k) =>
-        !Object.hasOwn(body, k)
-      )
+      ["regno", "name", "year", "section", "batch", "department", "password"]
+        .some((k) => !Object.hasOwn(body, k))
     ) {
       throw createError({
         statusCode: 400,
         statusText: "Invalid Form Body",
       });
     }
+    const encryptedPass = await hash(
+      body.password,
+      Number(process.env.BCRYPT_SALT),
+    );
     try {
-      await client.prisma.mentees.create({
-        data: body,
+      const user = await client.prisma.users.create({
+        data: { username: body.regno, password: encryptedPass },
+      });
+      await client.prisma.students.create({
+        data: {
+          register_no: body.regno,
+          user_id: user.id,
+          name: body.name,
+          year: body.year,
+          section: body.section,
+          batch: body.batch,
+          department_id: body.department,
+        },
       });
       return { message: "Account created successfully!" };
     } catch (err) {

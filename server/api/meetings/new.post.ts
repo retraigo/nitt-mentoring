@@ -1,5 +1,4 @@
 import { Client } from "../../utils/database.js";
-import type { Meeting } from "../../../types/types.js";
 
 const client = new Client();
 
@@ -20,7 +19,7 @@ export default defineEventHandler(async (e) => {
         statusText: "Session expired. Please login again.",
       });
     }
-    const body = await readBody<Meeting>(e);
+    const body = await readBody<{date: Date, discussion: string; mentee_id: string}>(e);
     if (
       ["date", "discussion", "mentee_id"].some((k) => !Object.hasOwn(body, k))
     ) {
