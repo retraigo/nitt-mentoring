@@ -13,6 +13,9 @@ COPY package.json /app/
 # install all depencies
 RUN npm i
 
+# generate types
+RUN npm run prisma-generate
+
 # copy over all files to the work directory
 ADD . /app
 
