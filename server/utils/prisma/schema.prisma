@@ -99,7 +99,7 @@ model students {
     department    department @relation(references: [id], fields: [department_id])
     department_id String
     mentor_id     Int?
-    mentor        faculty?   @relation(references: [user_id], fields: [mentor_id])
+    mentor        faculty?   @relation(references: [id], fields: [mentor_id])
     meetings      meetings[]
 }
 

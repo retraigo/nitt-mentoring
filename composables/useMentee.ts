@@ -1,4 +1,4 @@
-import type { Student } from "@/types/types.js";
+import type { PartialStudent, Student } from "@/types/types.js";
 
 export async function useMentee(): Promise<Student[]>;
 export async function useMentee(
@@ -38,7 +38,7 @@ export async function useSudoMentee(regno?: string) {
   if (!auth.value) return false;
   if (regno) {
     try {
-      const user = await $fetch<Student>(
+      const user = await $fetch<PartialStudent>(
         `/api/mentees/${regno}`,
         {
           method: "GET",
@@ -50,7 +50,7 @@ export async function useSudoMentee(regno?: string) {
       return false;
     }
   } else {
-    const users = await $fetch<Student[]>(`/api/mentees/all`, {
+    const users = await $fetch<PartialStudent[]>(`/api/mentees/dept`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });

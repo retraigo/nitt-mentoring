@@ -12,7 +12,5 @@ definePageMeta({
         "level1"
     ]
 })
-const faculties = await useUsers()
-
-const mentees = (await useSudoMentee()).map(mentee => ({ ...mentee, mentor: faculties.find(faculty => faculty.id === mentee.mentor_id) || { username: "Not Assigned" } }))
+const mentees = (await useSudoMentee()).map(mentee => ({ ...mentee, mentor: mentee.mentor || { name: "Not Assigned" } }))
 </script>

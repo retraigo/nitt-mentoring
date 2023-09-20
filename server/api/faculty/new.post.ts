@@ -52,7 +52,7 @@ export default defineEventHandler(async (e) => {
     );
     try {
       const user = await client.prisma.users.create({
-        data: { username: body.username, password: encryptedPass },
+        data: { username: body.username, password: encryptedPass, level: body.level || 1 },
       });
       await client.prisma.faculty.create({
         data: {

@@ -6,9 +6,9 @@
                     {{ expandFilter ? `-` : `+` }}</button>
                 <div
                     :class="`${expandFilter ? `max-h-[90rem]` : `max-h-0`} flex flex-col lg:flex-row gap-2 overflow-y-hidden transition-all duration-500 ease-in-out`">
-                    <input type="text" id="search_field" v-model="year"
+                    <input type="text" id="search_field" v-model="batch"
                         class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
-                        placeholder="Year" />
+                        placeholder="Batch" />
                     <input type="text" id="search_field" v-model="classSection"
                         class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
                         placeholder="Section" />
@@ -27,14 +27,14 @@
                 <th>Meetings</th>
             </thead>
             <tbody>
-                <tr v-for="mentee in computedMentees" :key="mentee.regno"
+                <tr v-for="mentee in computedMentees" :key="mentee.register_number"
                     class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
-                    <td>{{ mentee.regno }}</td>
+                    <td>{{ mentee.register_number }}</td>
                     <td>{{ mentee.name }}</td>
                     <td>{{ mentee.year }} - {{ mentee.section }}</td>
-                    <td v-if="mentee.mentor">{{ mentee.mentor.username }}</td>
+                    <td v-if="mentee.mentor">{{ mentee.mentor.name }}</td>
                     <td>
-                        <NuxtLink :to="`/dashboard/mentees/${mentee.regno}`"> <span class="sr-only">Check Meeting
+                        <NuxtLink :to="`/dashboard/mentees/${mentee.register_number}`"> <span class="sr-only">Check Meeting
                                 Details</span>
                             <svg class="block w-5 h-5 stroke-2 stroke-rose-700 mx-auto" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24" aria-hidden="true">
@@ -51,22 +51,22 @@
 </template>
 
 <script setup lang="ts">
-import type { Mentee, User } from "@/types/types.js"
-const { mentees } = defineProps<{ mentees: (Mentee & { mentor?: User })[] }>()
+import type { PartialStudent, Faculty, User } from "@/types/types.js"
+const { mentees } = defineProps<{ mentees: (PartialStudent)[] }>()
 
 const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :
         mentees.filter(x => {
             return (
-                (search.value.startsWith("#") ? x.regno.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
-                (year.value ? x.year === Number(year.value) : true) &&
+                (search.value.startsWith("#") ? x.register_number.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
+                (batch.value ? x.batch === Number(batch.value) : true) &&
                 (classSection.value ? x.section === classSection.value : true)
             )
         })
 })
 
 const search = ref("")
-const year = ref("")
+const batch = ref("")
 const classSection = ref("")
 const expandFilter = ref(false)
 </script>

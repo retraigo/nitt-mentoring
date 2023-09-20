@@ -25,18 +25,21 @@ export const DataManager = {
   createPartialStudent(data: any): PartialStudent {
     return {
       name: data.name,
-      register_number: data.register_number,
+      register_number: data.register_no,
       year: data.year,
       section: data.section,
       batch: data.batch,
       department: data.department,
       mentor_id: data.mentor_id,
+      mentor: data.mentor
+        ? this.createPartialFaculty(data.mentor)
+        : data.mentor,
     };
   },
   createStudent(data: any): Student {
     return {
       name: data.name,
-      register_number: data.register_number,
+      register_number: data.register_no,
       year: data.year,
       section: data.section,
       batch: data.batch,

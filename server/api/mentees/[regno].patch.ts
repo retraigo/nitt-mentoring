@@ -29,7 +29,7 @@ export default defineEventHandler(async (e) => {
     }
     const body = await readBody<{ mentor_id: number }>(e);
     const mentor = await client.prisma.faculty.findFirst({
-      where: { user_id: body.mentor_id },
+      where: { id: body.mentor_id },
     });
     if (mentor || body.mentor_id === -1) {
       await client.prisma.students.update({

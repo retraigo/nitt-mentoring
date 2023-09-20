@@ -24,22 +24,24 @@ export default defineEventHandler(async (e) => {
         statusText: "You do not have permission.",
       });
     }
-    const userId = getRouterParam(e, "userId");
-    const user = await client.prisma.faculty.findFirst({
-      where: { user_id: Number(userId) },
-      include: {
-        mentees: true,
-        user: true
-      }
+    const current = await client.prisma.faculty.findFirst({
+      where: { user_id: Number(jwtPayload.id) },
     });
-    if (user) {
-      return {
-        id: user.user_id,
-        username: user.user.username,
-        level: user.user.level,
-        mentees: user.mentees,
-      };
+    if (current) {
+      const users = await client.prisma.faculty.findMany({
+        where: { department_id: current.department_id },
+        include: { user: true },
+      });
+      if (users) {
+        return users.map((user) => client.manager.createPartialFaculty(user));
+      } else {
+        // This def won't happen
+        throw createError({
+          statusCode: 404,
+        });
+      }
     } else {
+      // This def won't happen
       throw createError({
         statusCode: 404,
       });

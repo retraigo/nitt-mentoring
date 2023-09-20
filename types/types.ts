@@ -38,6 +38,7 @@ export type PartialStudent = {
   batch: number;
   department: Department;
   mentor_id?: number;
+  mentor?: FacultyInfo
 };
 
 export type Student = PartialStudent & {

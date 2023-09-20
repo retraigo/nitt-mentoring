@@ -18,15 +18,13 @@
                 </div>
                 <table v-if="mentors" class="table-auto border-collapse w-full max-w-full">
                     <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
-                        <th>Type</th>
                         <th>Name</th>
                         <th>Mentees</th>
                     </thead>
                     <tbody>
-                        <tr v-for="mentor in computedmentors" :key="mentor.username"
+                        <tr v-for="mentor in computedmentors" :key="mentor.id"
                             class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
-                            <td>{{ mentor.level === 1 ? `Faculty` : `Head` }}</td>
-                            <td>{{ mentor.username }}</td>
+                            <td>{{ mentor.name }}</td>
                             <td>
                                 <NuxtLink :to="`/hod/faculty/${mentor.id}`"> <span class="sr-only">Check Meeting
                                         Details</span>
@@ -53,13 +51,13 @@ definePageMeta({
     ]
 })
 const useStore = useUserStore()
-const mentors = await useUsers();
+const mentors = await useAllFaculty();
 
 const computedmentors = computed(() => {
     return !expandFilter.value ? mentors :
         mentors.filter(x => {
             return (
-                (search.value.startsWith("#") ? String(x.id).startsWith(search.value.slice(1)) : x.username.toLowerCase().includes(search.value.toLowerCase()))
+                (search.value.startsWith("#") ? String(x.id).startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase()))
             )
         })
 })

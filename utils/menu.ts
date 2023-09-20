@@ -51,10 +51,10 @@ export const MainMenu = [
   },
   {
     name: "Edit Faculty",
-    action: "/admin/faculty/edit",
+    action: "/admin/pass/edit",
     key: "facultyedit",
-    toolTip: "Edit Faculty",
-    routeIcon: `${AllIcons.userplus}`,
+    toolTip: "Edit Password",
+    routeIcon: `${AllIcons.reports}`,
     level: 3,
   }, /*
   {

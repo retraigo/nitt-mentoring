@@ -1,6 +1,7 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -8,6 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prisma-generate": "prisma generate --schema=./server/utils/prisma/schema.prisma",
+    "create-user": "node ./server/utils/create_user.js",
+    "create-dept": "node ./server/utils/create_department.js",
     "db_push": "prisma db push --schema=./server/utils/prisma/schema.prisma"
   },
   "devDependencies": {

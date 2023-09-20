@@ -35,15 +35,15 @@
                 <th>Mentor</th>
             </thead>
             <tbody>
-                <tr v-for="mentee in computedMentees" :key="mentee.regno"
+                <tr v-for="mentee in computedMentees" :key="mentee.register_number"
                     class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
                     <td><input type="checkbox" :checked="mentee.mentor_id === Number(facultyId)"
                             :disabled="Boolean(mentee.mentor_id && mentee.mentor_id !== -1 && (mentee.mentor_id !== Number(facultyId)))"
-                            @change="e => updateMentor(e, mentee.regno)" /></td>
-                    <td>{{ mentee.regno }}</td>
+                            @change="e => updateMentor(e, mentee.register_number)" /></td>
+                    <td>{{ mentee.register_number }}</td>
                     <td>{{ mentee.name }}</td>
                     <td>{{ mentee.year }} - {{ mentee.section }}</td>
-                    <td>{{ mentee.mentor?.username }}</td>
+                    <td>{{ mentee.mentor?.name }}</td>
                 </tr>
             </tbody>
         </table>
@@ -61,17 +61,16 @@ const auth = useCookie<string>("nitt_token")
 const route = useRoute()
 const router = useRouter()
 const facultyId = route.params.facultyId;
-const faculty = await useSudoUser(Number(facultyId))
-const faculties = await useUsers()
+const faculty = await useFaculty(Number(facultyId))
 
-const mentees = (await useSudoMentee()).map(mentee => ({ ...mentee, mentor: faculties.find(faculty => faculty.id === mentee.mentor_id) || {username: "Not Assigned"} }))
+const mentees = (await useSudoMentee()).map(mentee => ({ ...mentee, mentor: mentee.mentor || { name: "Not Assigned" } }))
 if (!faculty) nextTick(() => router.go(-1))
 else mentees.sort((a, b) => a.mentor_id === faculty.id && b.mentor_id !== faculty.id ? -1 : a.mentor_id !== faculty.id && b.mentor_id === faculty.id ? 1 : 0)
 
 const menteeMap = new Map<string, number>();
 
-mentees.forEach(mentee => menteeMap.set(mentee.regno, mentee.mentor_id));
-
+mentees.forEach(mentee => menteeMap.set(mentee.register_number, mentee.mentor_id || -1));
+console.log(mentees)
 
 const updateMentor = async (e: Event, regno: string) => {
     const box = e.currentTarget as HTMLInputElement;
@@ -82,7 +81,7 @@ const updateMentor = async (e: Event, regno: string) => {
 const pushChanges = async () => {
     let successes = 0;
     for await (const [mtee, mtor] of menteeMap.entries()) {
-        if (mtor !== mentees.find(x => x.regno === mtee)?.mentor_id) {
+        if (mtor !== mentees.find(x => x.register_number === mtee)?.mentor_id) {
             await useFetch<{ token: string }>(`/api/mentees/${mtee}`, {
                 method: "PATCH", body: JSON.stringify({ mentor_id: mtor }),
                 headers: { "Authorization": `Bearer ${auth.value}` },
@@ -106,7 +105,7 @@ const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :
         mentees.filter(x => {
             return (
-                (search.value.startsWith("#") ? x.regno.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
+                (search.value.startsWith("#") ? x.register_number.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
                 (year.value ? x.year === Number(year.value) : true) &&
                 (classSection.value ? x.section === classSection.value : true)
             )
