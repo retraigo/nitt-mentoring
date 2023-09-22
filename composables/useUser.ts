@@ -11,15 +11,22 @@ export async function useUser() {
   return user;
 }
 
-export async function useFaculty(id: number): Promise<Faculty | false> {
+export async function useFaculty(id?: number): Promise<Faculty | false> {
   const auth = useCookie<string>("nitt_token");
   if (!auth.value) return false;
-
-  const user = await $fetch<Faculty>(`/api/faculty/${id}`, {
-    method: "GET",
-    headers: { "Authorization": `Bearer ${auth.value}` },
-  });
-  return user;
+  if (id) {
+    const user = await $fetch<Faculty>(`/api/faculty/${id}`, {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${auth.value}` },
+    });
+    return user;
+  } else {
+    const user = await $fetch<Faculty>(`/api/faculty/me`, {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${auth.value}` },
+    });
+    return user;
+  }
 }
 
 export async function useAllFaculty(): Promise<FacultyInfo[]> {
@@ -31,7 +38,7 @@ export async function useAllFaculty(): Promise<FacultyInfo[]> {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
-    console.log(users)
+    console.log(users);
     return users;
   } catch (e) {
     return [] as FacultyInfo[];

@@ -34,14 +34,14 @@
                     <td>{{ mentee.year }} - {{ mentee.section }}</td>
                     <td v-if="mentee.mentor">{{ mentee.mentor.name }}</td>
                     <td>
-                        <NuxtLink :to="`/dashboard/mentees/${mentee.register_number}`"> <span class="sr-only">Check Meeting
+                        <a :href="`/dashboard/mentees/${mentee.register_number}`"> <span class="sr-only">Check Meeting
                                 Details</span>
                             <svg class="block w-5 h-5 stroke-2 stroke-rose-700 mx-auto" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24" aria-hidden="true">
                                 <path class="transition-all duration-500 transform ease-in-out" stroke-linecap="round"
                                     stroke-linejoin="round" :d="`${AllIcons.userplus}`" />
                             </svg>
-                        </NuxtLink>
+                        </a>
                     </td>
                 </tr>
             </tbody>

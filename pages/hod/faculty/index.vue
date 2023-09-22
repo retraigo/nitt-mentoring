@@ -26,7 +26,7 @@
                             class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
                             <td>{{ mentor.name }}</td>
                             <td>
-                                <NuxtLink :to="`/hod/faculty/${mentor.id}`"> <span class="sr-only">Check Meeting
+                                <a :href="`/hod/faculty/${mentor.id}`"> <span class="sr-only">Check Meeting
                                         Details</span>
                                     <svg class="block w-5 h-5 stroke-2 stroke-rose-700 mx-auto"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -34,7 +34,7 @@
                                         <path class="transition-all duration-500 transform ease-in-out"
                                             stroke-linecap="round" stroke-linejoin="round" :d="`${AllIcons.userplus}`" />
                                     </svg>
-                                </NuxtLink>
+                                </a>
                             </td>
                         </tr>
                     </tbody>

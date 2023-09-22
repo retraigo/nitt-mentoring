@@ -21,7 +21,7 @@ export default defineEventHandler(async (e) => {
     const meetingId = getRouterParam(e, "meetingId");
     const meeting = await client.prisma.meetings.findFirst({
       where: { id: Number(meetingId) },
-      include: {mentee: true, mentor: true}
+      include: { mentee: true, mentor: true },
     });
     if (meeting) {
       if (

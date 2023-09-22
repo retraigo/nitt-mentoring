@@ -10,6 +10,11 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     userStore.username = user.username;
     userStore.id = user.id;
     userStore.level = user.level;
+    if (user.level === 1 || user.level === 2) {
+      const faculty = await useFaculty();
+      // @ts-ignore
+      userStore.faculty = faculty;
+    }
   } catch (e) {
     return navigateTo(`/login?redirect=${to.fullPath}`);
   }

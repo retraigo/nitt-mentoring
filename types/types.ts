@@ -1,17 +1,23 @@
 export type User =
-  & { id: number; username: string; password: string }
-  & ({
-    level: 0;
-    mentee: Student;
-  } | {
-    level: 1;
-    mentor: Faculty;
-  } | {
-    level: 2;
-    mentor: Faculty;
-  } | {
-    level: 3;
-  });
+  & { id: number; username: string }
+  & (
+    | { level: -1 }
+    | {
+      level: 0;
+      student: Student;
+    }
+    | {
+      level: 1;
+      faculty: Faculty;
+    }
+    | {
+      level: 2;
+      faculty: Faculty;
+    }
+    | {
+      level: 3;
+    }
+  );
 
 export type Department = {
   name: string;
@@ -38,7 +44,7 @@ export type PartialStudent = {
   batch: number;
   department: Department;
   mentor_id?: number;
-  mentor?: FacultyInfo
+  mentor?: FacultyInfo;
 };
 
 export type Student = PartialStudent & {

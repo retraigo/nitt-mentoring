@@ -5,7 +5,7 @@ export async function useMe(): Promise<Student | false> {
   if (!auth.value) return false;
   try {
     const user = await $fetch<Student>(
-      `/api/mentees/whoami`,
+      `/api/students/whoami`,
       {
         method: "GET",
         headers: { "Authorization": `Bearer ${auth.value}` },

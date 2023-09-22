@@ -18,6 +18,12 @@ export default defineEventHandler(async (e) => {
         statusText: "Session expired. Please login again.",
       });
     }
+    if (Number(jwtPayload.level) < 1) {
+      throw createError({
+        statusCode: 401,
+        statusText: "You do not have permission.",
+      });
+    }
     const user = await client.prisma.faculty.findFirst({
       where: { user_id: Number(jwtPayload.id) },
       include: { mentees: true },

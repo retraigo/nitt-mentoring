@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { User } from "types/types";
 
 export const useUserStore = defineStore("userInfo", {
   state: () => {
@@ -8,7 +9,9 @@ export const useUserStore = defineStore("userInfo", {
       department: 0,
       id: 0,
       level: -1,
-    };
+      faculty: false,
+      student: false,
+    } as User & { loggedIn: boolean };
   },
   actions: {
     signOut() {
