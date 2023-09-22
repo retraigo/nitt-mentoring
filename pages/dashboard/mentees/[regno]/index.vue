@@ -92,7 +92,6 @@ if (!mentee) {
         navigateTo("/dashboard")
     })
 } else {
-    console.log(mentee)
     meetings.value = mentee.meetings.map(x => ({ ...x, date: new Date(x.date) })).sort((a, b) => b.date.getTime() - a.date.getTime());
     //  meetings.value = mentee.meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }

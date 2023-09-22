@@ -16,6 +16,8 @@ RUN npm i
 # generate types
 RUN npm run prisma-generate
 
+RUN npm run db_push
+
 # copy over all files to the work directory
 ADD . /app
 

@@ -38,7 +38,6 @@ export async function useAllFaculty(): Promise<FacultyInfo[]> {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
-    console.log(users);
     return users;
   } catch (e) {
     return [] as FacultyInfo[];

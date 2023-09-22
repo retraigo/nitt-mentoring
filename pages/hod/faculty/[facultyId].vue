@@ -70,7 +70,6 @@ else mentees.sort((a, b) => a.mentor_id === faculty.id && b.mentor_id !== facult
 const menteeMap = new Map<string, number>();
 
 mentees.forEach(mentee => menteeMap.set(mentee.register_number, mentee.mentor_id || -1));
-console.log(mentees)
 
 const updateMentor = async (e: Event, regno: string) => {
     const box = e.currentTarget as HTMLInputElement;

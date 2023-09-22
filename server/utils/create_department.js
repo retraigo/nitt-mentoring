@@ -11,4 +11,4 @@ const body = {
 const dept = await client.department.create({
   data: { id: body.dept_id, name: body.dept_name },
 });
-console.log({ message: "Account created successfully!" });
+console.log({ message: "Department created successfully!" });

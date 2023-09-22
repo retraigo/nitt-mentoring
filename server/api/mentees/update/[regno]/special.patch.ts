@@ -47,7 +47,6 @@ export default defineEventHandler(async (e) => {
         extra_curricular: string;
       }
     >(e);
-    console.log(body);
     await client.prisma.students.update({
       where: { register_no: regno },
       data: {
