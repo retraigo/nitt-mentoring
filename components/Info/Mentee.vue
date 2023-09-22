@@ -4,11 +4,11 @@
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <div class="grid grid-cols-2 max-w-xs">
                 <span class="uppercase font-bold">Batch</span>
-                <span class="font-semibold">{{ mentee.batch.split("T").join(" - ") }}</span>
+                <span class="font-semibold">{{ mentee.batch }}</span>
             </div>
             <div class="grid grid-cols-2 max-w-xs">
                 <span class="uppercase font-bold">Reg #</span>
-                <span class="font-semibold">{{ mentee.regno }}</span>
+                <span class="font-semibold">{{ mentee.register_number }}</span>
             </div>
             <div class="grid grid-cols-2 max-w-xs">
                 <span class="uppercase font-bold">Year</span>
@@ -20,14 +20,14 @@
             </div>
             <div class="grid grid-cols-2 max-w-xs">
                 <span class="uppercase font-bold">Mentor</span>
-                <span class="font-semibold">{{ mentee.mentor ? mentee.mentor.username : 'NA' }}</span>
+                <span class="font-semibold">{{ mentee.mentor?.name || 'NA' }}</span>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import type { Mentee, User } from '@/types/types.js';
+import type { PartialStudent, Student, User } from '@/types/types.js';
 const { mentee } = defineProps<{
-    mentee: Mentee & { mentor: User | null }
+    mentee: PartialStudent
 }>()
 </script>

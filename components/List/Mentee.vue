@@ -23,7 +23,7 @@
                 <th>Reg #</th>
                 <th>Name</th>
                 <th>Year & Section</th>
-                <th v-if="mentees[0].mentor">Mentor</th>
+                <th v-if="mentees[0]?.mentor">Mentor</th>
                 <th>Meetings</th>
             </thead>
             <tbody>

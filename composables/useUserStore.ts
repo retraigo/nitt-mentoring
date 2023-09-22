@@ -7,7 +7,7 @@ export const useUserStore = defineStore("userInfo", {
       loggedIn: false,
       department: 0,
       id: 0,
-      level: 0,
+      level: -1,
     };
   },
   actions: {

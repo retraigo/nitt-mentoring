@@ -3,8 +3,8 @@
         <InfoMentee v-if="mentee" :mentee="mentee" />
         <div class="flex flex-row items-center justify-start lg:justify-end w-full gap-4">
             <div class="flex flex-col items-end gap-4">
-                <NuxtLink v-if="mentee && mentee.mentor_id == userStore.id"
-                    :to="`/dashboard/mentees/${mentee.regno}/meetings/new`"
+                <NuxtLink v-if="mentee"
+                    :to="`/dashboard/mentees/${mentee.register_number}/meetings/new`"
                     class="bg-nitMaroon-600 text-white rounded-md p-2">
                     New Meeting</NuxtLink>
             </div>
@@ -35,9 +35,9 @@
                 <th>View</th>
             </thead>
             <tbody>
-                <tr v-for="meeting in meetings" :key="`meeting_${meeting.id}`"
+                <tr v-for="meeting, i in meetings" :key="`meeting_${meeting.id}`"
                     class="text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
-                    <td>{{ meeting.i }}</td>
+                    <td>{{ meetings.length - i }}</td>
                     <td>{{ new Date(meeting.date).toISOString().split("T")[0] }}</td>
                     <td>{{ meeting.discussion }}</td>
                     <td>
@@ -78,7 +78,8 @@ if (!mentee) {
         navigateTo("/dashboard")
     })
 } else {
-    meetings.value = mentee.meetings.sort((a, b) => a.id - b.id).map((x, i) => ({...x, i: i+1})).reverse();
+    console.log(mentee)
+    meetings.value = mentee.meetings.map(x => ({...x, date: new Date(x.date)})).sort((a, b) => b.date.getTime() - a.date.getTime());
     //  meetings.value = mentee.meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 </script>

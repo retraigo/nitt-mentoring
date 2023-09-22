@@ -18,15 +18,17 @@ export default defineEventHandler(async (e) => {
         statusText: "Session expired. Please login again.",
       });
     }
-    const users = await client.prisma.students.findMany({
-      where: { mentor_id: Number(jwtPayload.id) },
+    const user = await client.prisma.faculty.findFirst({
+      where: { user_id: Number(jwtPayload.id) },
+      include: { mentees: true },
     });
-    if (users) {
+    if (user) {
+      const users = user.mentees;
       return users.map((user) => client.manager.createPartialStudent(user));
     } else {
       throw createError({
         statusCode: 404,
-        statusText: "No mentees found"
+        statusText: "No mentees found",
       });
     }
   }

@@ -1,5 +1,22 @@
 import type { PartialStudent, Student } from "@/types/types.js";
 
+export async function useMe(): Promise<Student | false> {
+  const auth = useCookie<string>("nitt_token");
+  if (!auth.value) return false;
+  try {
+    const user = await $fetch<Student>(
+      `/api/mentees/whoami`,
+      {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${auth.value}` },
+      },
+    );
+    return user;
+  } catch (e) {
+    return false;
+  }
+}
+
 export async function useMentee(): Promise<Student[]>;
 export async function useMentee(
   regno: string,

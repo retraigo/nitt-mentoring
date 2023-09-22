@@ -1,7 +1,8 @@
 export default defineNuxtRouteMiddleware(async (to, _from) => {
   try {
     const user = await useUser();
-    if (!user) {
+    if (!user || user.level < 1) {
+      if (user && user.level === 0) return navigateTo("/student/me");
       return navigateTo(`/login?redirect=${to.fullPath}`);
     }
     const userStore = useUserStore();

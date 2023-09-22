@@ -9,9 +9,9 @@ import {
 export const DataManager = {
   createPartialFaculty(data: any): FacultyInfo {
     return {
-      id: data.id,
-      name: data.name,
-      department: data.department,
+      id: data?.id || -1,
+      name: data?.name || "Not Assigned",
+      department: data?.department || "Not Assigned",
     };
   },
   createFaculty(data: any): Faculty {
@@ -44,7 +44,10 @@ export const DataManager = {
       section: data.section,
       batch: data.batch,
       department: data.department,
-      mentor: this.createFaculty(data.mentor),
+      mentor: this.createPartialFaculty(data.mentor),
+      meetings: data.meetings.map((x: any) =>
+        this.createPartialMeeting({ ...x })
+      ),
       personal_info: {
         blood_group: data.blood_group,
         mobile_number: data.mobile_number,
@@ -139,13 +142,22 @@ export const DataManager = {
       })),
     };
   },
+  createPartialMeeting(
+    data: any,
+  ): { discussion: string; id: number; date: Date } {
+    return {
+      id: data.id,
+      date: new Date(data.date),
+      discussion: data.discussion,
+    };
+  },
   createMeeting(data: any): Meeting {
     return {
       id: data.id,
-      date: data.date,
-      discussion: data.discussionm,
+      date: new Date(data.date),
+      discussion: data.discussion,
       mentee: this.createPartialStudent(data.mentee),
-      mentor: this.createFaculty(data.faculty),
+      mentor: this.createPartialFaculty(data.mentor),
     };
   },
 };

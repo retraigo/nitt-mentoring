@@ -43,6 +43,7 @@ export type PartialStudent = {
 
 export type Student = PartialStudent & {
   mentor: FacultyInfo;
+  meetings: Meeting[];
   personal_info: Partial<{
     blood_group: string;
     mobile_number: string;

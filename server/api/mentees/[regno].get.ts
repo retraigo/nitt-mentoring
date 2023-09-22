@@ -23,7 +23,8 @@ export default defineEventHandler(async (e) => {
       where: { register_no: regno },
       include: {
         meetings: true,
-        mentor: true
+        mentor: true,
+        academics: true,
       }
     });
     if (mentee) {
