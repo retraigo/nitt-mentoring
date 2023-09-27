@@ -41,6 +41,9 @@ model students {
     section     String
     batch       Int
 
+    // Whether they can edit their profile
+    editable_personal Boolean @default(false)
+
     // To be filled by student
     gender          String?
     period_of_study String?
