@@ -2,8 +2,7 @@
     <div :class="`p-2 flex flex-col items-stretch`">
         <div class="p-2 rounded-xl items-center flex justify-between bg-nitMaroon-100">
             <div class="flex items-center gap-8">
-                <div class="flex flex-col items-stretch gap-2">
-                    <span class="text-xs uppercase">Allow Editing</span>
+                <div class="flex flex-col items-stretch gap-2" title="Allow Editing">
                     <MiscSwitch :turned-on="mentee.enable_edit_profile" />
                 </div>
                 <div class="text-xl font-semibold">{{ mentee.name }} #{{ mentee.register_number }}</div>
@@ -31,6 +30,7 @@
                 </a>
             </div>
             <div class="p-2">
+                <!-- BASIC STUDENT INFO -->
                 <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Basic Info</h2>
                 <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updateBasic(e)">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
@@ -60,6 +60,54 @@
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
+                <!-- STUDENT PERSONAL INFO -->
+                <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Personal Info</h2>
+                <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updatePersonal(e)">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_blood">Blood Group</label>
+                            <input type="number" name="student_blood" id="student_blood" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.blood_group" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_mobile">Mobile Number</label>
+                            <input type="number" name="student_mobile" id="student_mobile" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.mobile_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_whatsapp">WhatsApp Number</label>
+                            <input type="text" name="student_whatsapp" id="student_whatsapp" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.whatsapp_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_date_of_birth">Date Of Birth</label>
+                            <input type="date" name="student_date_of_birth" id="student_date_of_birth"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.date_of_birth" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_gender">Gender</label>
+                            <select name="student_gender" id="student_gender" class="font-semibold p-2 w-48">
+                                <option value="male" :selected="mentee.personal_info.gender === `male`">Male</option>
+                                <option value="female" :selected="mentee.personal_info.gender === `female`">Female</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_email_id">Email ID</label>
+                            <input type="text" name="student_email_id" id="student_email_id" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.email_id" />
+                        </div>
+                    </div>
+                    <MiscMessage
+                        :class="`${personalMessage.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                        :type="personalMessage.type">
+                        {{ personalMessage.text }}</MiscMessage>
+                    <button type="submit"
+                        class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
+                        Edit Personal Info
+                    </button>
+                </form>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
+                <!-- SPECIAL ACHIEVEMENT INFO -->
                 <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Achievements / Special Info</h2>
                 <form class="flex flex-col items-center gap-4 pt-8" @submit="e => updateSpecial(e)">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -91,6 +139,7 @@ const editOpen = ref(false)
 
 const specialMessage = ref({ type: "error", text: "" })
 const basicMessage = ref({ type: "error", text: "" })
+const personalMessage = ref({ type: "error", text: "" })
 
 const toggleDrop = () => editOpen.value = !editOpen.value
 
@@ -130,7 +179,74 @@ const updateSpecial = async (e: Event) => {
 
 const updateBasic = async (e: Event) => {
     e.preventDefault();
-    basicMessage.value.type = "warning"
-    basicMessage.value.text = "Not implemented."
+    const form = e.currentTarget;
+    const formData = new FormData(form as HTMLFormElement);
+    const data: Partial<Student> = {
+        year: Number(formData.get("student_year") as string),
+        batch: Number(formData.get("student_batch") as string),
+        section: formData.get("student_section") as string,
+    };
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/basic`, {
+        method: "PATCH", body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            basicMessage.value.type = "success"
+            basicMessage.value.text = "Updated details."
+        },
+        onResponseError({ request, response, options }) {
+            basicMessage.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    basicMessage.value.text = "Missing Fields."
+                case 401:
+                    basicMessage.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    basicMessage.value.text = "An unknown error occurred";
+                    break;
+            }
+        }
+    })
+};
+
+const updatePersonal = async (e: Event) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form as HTMLFormElement);
+    const data: Omit<Omit<Student["personal_info"], "father">, "mother"> = {
+        blood_group: formData.get("student_blood") as string,
+        mobile_number: formData.get("student_mobile") as string,
+        whatsapp_number: formData.get("student_whatsapp") as string,
+        date_of_birth: new Date(formData.get("student_date_of_birth") as string),
+        gender: formData.get("student_gender") as string,
+        email_id: formData.get("student_email_id") as string,
+    };
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/basic`, {
+        method: "PATCH", body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            personalMessage.value.type = "success"
+            personalMessage.value.text = "Updated details."
+        },
+        onResponseError({ request, response, options }) {
+            personalMessage.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    personalMessage.value.text = "Missing Fields."
+                case 401:
+                    personalMessage.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    personalMessage.value.text = "An unknown error occurred";
+                    break;
+            }
+        }
+    })
 };
 </script>
