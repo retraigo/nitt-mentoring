@@ -17,7 +17,7 @@
             </button>
         </div>
         <div
-            :class="`${editOpen ? `max-h-[100rem]` : `max-h-[0rem]`} overflow-y-hidden transition-all duration-500 ease-in-out bg-nitMaroon-100/50 flex flex-col space-y-4`">
+            :class="`${editOpen ? `max-h-[999rem]` : `max-h-[0rem]`} overflow-y-hidden transition-all duration-500 ease-in-out bg-nitMaroon-100/50 flex flex-col space-y-4`">
             <div class="p-2">
                 <a :href="`/dashboard/mentees/${mentee.register_number}`" class="flex items-center gap-2 max-w-xs mx-auto">
                     <span class="text-rose-700">Check Meeting
@@ -93,7 +93,7 @@
                         </div>
                         <div class="grid grid-cols-2 items-center max-w-xs">
                             <label for="student_email_id">Email ID</label>
-                            <input type="text" name="student_email_id" id="student_email_id" class="font-semibold p-2 w-48"
+                            <input type="email" name="student_email_id" id="student_email_id" class="font-semibold p-2 w-48"
                                 :value="mentee.personal_info.email_id" />
                         </div>
                     </div>
@@ -107,7 +107,97 @@
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
-                <!-- SPECIAL ACHIEVEMENT INFO -->
+
+                <!-- STUDENT FATHER INFO -->
+                <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Father Info</h2>
+                <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updateFather(e)">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_name">Name</label>
+                            <input type="number" name="student_f_name" id="student_f_name" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.father?.name" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_occupation">Occupation</label>
+                            <input type="number" name="student_f_occupation" id="student_f_occupation"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.father?.occupation" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_mobile">Mobile Number</label>
+                            <input type="number" name="student_f_mobile" id="student_f_mobile"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.father?.mobile_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_whatsapp">WhatsApp Number</label>
+                            <input type="text" name="student_f_whatsapp" id="student_f_whatsapp"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.father?.whatsapp_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_email_id">Email ID</label>
+                            <input type="email" name="student_f_email_id" id="student_f_email_id"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.father?.email_id" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_f_address">Address</label>
+                            <input type="text" name="student_f_address" id="student_f_address"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.father?.address" />
+                        </div>
+                    </div>
+                    <MiscMessage
+                        :class="`${fatherMessage.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                        :type="fatherMessage.type">
+                        {{ fatherMessage.text }}</MiscMessage>
+                    <button type="submit"
+                        class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
+                        Edit Father Info
+                    </button>
+                </form>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
+                <!-- STUDENT MOTHER INFO -->
+                <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Mother Info</h2>
+                <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updateMother(e)">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_name">Name</label>
+                            <input type="number" name="student_m_name" id="student_m_name" class="font-semibold p-2 w-48"
+                                :value="mentee.personal_info.mother?.name" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_occupation">Occupation</label>
+                            <input type="number" name="student_m_occupation" id="student_m_occupation"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.mother?.occupation" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_mobile">Mobile Number</label>
+                            <input type="number" name="student_m_mobile" id="student_m_mobile"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.mother?.mobile_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_whatsapp">WhatsApp Number</label>
+                            <input type="text" name="student_m_whatsapp" id="student_m_whatsapp"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.mother?.whatsapp_number" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_email_id">Email ID</label>
+                            <input type="email" name="student_m_email_id" id="student_m_email_id"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.mother?.email_id" />
+                        </div>
+                        <div class="grid grid-cols-2 items-center max-w-xs">
+                            <label for="student_m_address">Address</label>
+                            <input type="text" name="student_m_address" id="student_m_address"
+                                class="font-semibold p-2 w-48" :value="mentee.personal_info.mother?.address" />
+                        </div>
+                    </div>
+                    <MiscMessage
+                        :class="`${motherMessage.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                        :type="motherMessage.type">
+                        {{ motherMessage.text }}</MiscMessage>
+                    <button type="submit"
+                        class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
+                        Edit Mother Info
+                    </button>
+                </form>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" /> <!-- SPECIAL ACHIEVEMENT INFO -->
                 <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Achievements / Special Info</h2>
                 <form class="flex flex-col items-center gap-4 pt-8" @submit="e => updateSpecial(e)">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -140,6 +230,8 @@ const editOpen = ref(false)
 const specialMessage = ref({ type: "error", text: "" })
 const basicMessage = ref({ type: "error", text: "" })
 const personalMessage = ref({ type: "error", text: "" })
+const fatherMessage = ref({ type: "error", text: "" })
+const motherMessage = ref({ type: "error", text: "" })
 
 const toggleDrop = () => editOpen.value = !editOpen.value
 
@@ -244,6 +336,82 @@ const updatePersonal = async (e: Event) => {
                     break;
                 default:
                     personalMessage.value.text = "An unknown error occurred";
+                    break;
+            }
+        }
+    })
+};
+
+const updateFather = async (e: Event) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form as HTMLFormElement);
+    const data: Student["personal_info"]["father"] = {
+        name: formData.get("student_f_name") as string,
+        occupation: formData.get("student_f_occupation") as string,
+        mobile_number: formData.get("student_f_mobile") as string,
+        whatsapp_number: formData.get("student_f_whatsapp") as string,
+        email_id: formData.get("student_f_email_id") as string,
+        address: formData.get("student_f_address") as string,
+    };
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/father`, {
+        method: "PATCH", body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            fatherMessage.value.type = "success"
+            fatherMessage.value.text = "Updated details."
+        },
+        onResponseError({ request, response, options }) {
+            fatherMessage.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    fatherMessage.value.text = "Missing Fields."
+                case 401:
+                    fatherMessage.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    fatherMessage.value.text = "An unknown error occurred";
+                    break;
+            }
+        }
+    })
+};
+
+const updateMother = async (e: Event) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form as HTMLFormElement);
+    const data: Student["personal_info"]["mother"] = {
+        name: formData.get("student_m_name") as string,
+        occupation: formData.get("student_m_occupation") as string,
+        mobile_number: formData.get("student_m_mobile") as string,
+        whatsapp_number: formData.get("student_m_whatsapp") as string,
+        email_id: formData.get("student_m_email_id") as string,
+        address: formData.get("student_m_address") as string,
+    };
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/mother`, {
+        method: "PATCH", body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            fatherMessage.value.type = "success"
+            fatherMessage.value.text = "Updated details."
+        },
+        onResponseError({ request, response, options }) {
+            fatherMessage.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    fatherMessage.value.text = "Missing Fields."
+                case 401:
+                    fatherMessage.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    fatherMessage.value.text = "An unknown error occurred";
                     break;
             }
         }
