@@ -24,10 +24,10 @@ export default defineNuxtConfig({
         { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico" },
       ],
     },
-    pageTransition: {
+/*    pageTransition: {
       name: "rotate",
       mode: "out-in",
-    },
+    },*/
     layoutTransition: { name: "layout", mode: "out-in" },
   },
   devtools: { enabled: true },
