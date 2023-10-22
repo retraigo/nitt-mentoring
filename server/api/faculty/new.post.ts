@@ -4,6 +4,7 @@ import { Client } from "../../utils/database.js";
 const client = new Client();
 
 type UserCreds = {
+  faculty_id: string;
   username: string;
   password: string;
   level: number;
@@ -56,6 +57,7 @@ export default defineEventHandler(async (e) => {
       });
       await client.prisma.faculty.create({
         data: {
+          id: body.faculty_id,
           user_id: user.id,
           name: body.name,
           department_id: body.department,

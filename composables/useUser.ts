@@ -11,17 +11,17 @@ export async function useUser() {
   return user;
 }
 
-export async function useFaculty(id?: number): Promise<Faculty | false> {
+export async function useFaculty(id?: number): Promise<(Faculty & {menteeCount: number}) | false> {
   const auth = useCookie<string>("nitt_token");
   if (!auth.value) return false;
   if (id) {
-    const user = await $fetch<Faculty>(`/api/faculty/${id}`, {
+    const user = await $fetch<(Faculty & {menteeCount: number})>(`/api/faculty/${id}`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
     return user;
   } else {
-    const user = await $fetch<Faculty>(`/api/faculty/me`, {
+    const user = await $fetch<(Faculty & {menteeCount: number})>(`/api/faculty/me`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
@@ -29,17 +29,17 @@ export async function useFaculty(id?: number): Promise<Faculty | false> {
   }
 }
 
-export async function useAllFaculty(): Promise<FacultyInfo[]> {
+export async function useAllFaculty(): Promise<(FacultyInfo & {menteeCount: number})[]> {
   const auth = useCookie<string>("nitt_token");
-  if (!auth.value) return [] as FacultyInfo[];
+  if (!auth.value) return [] as (FacultyInfo & {menteeCount: number})[];
 
   try {
-    const users = await $fetch<FacultyInfo[]>(`/api/faculty/dept`, {
+    const users = await $fetch<(FacultyInfo & {menteeCount: number})[]>(`/api/faculty/dept`, {
       method: "GET",
       headers: { "Authorization": `Bearer ${auth.value}` },
     });
     return users;
   } catch (e) {
-    return [] as FacultyInfo[];
+    return [] as (FacultyInfo & {menteeCount: number})[];
   }
 }

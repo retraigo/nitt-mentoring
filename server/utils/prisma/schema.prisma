@@ -22,7 +22,7 @@ model users {
 }
 
 model faculty {
-    id            Int         @id @default(autoincrement())
+    id            Int         @id
     name          String
     user          users       @relation(references: [id], fields: [user_id])
     user_id       Int         @unique
