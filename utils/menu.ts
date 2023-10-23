@@ -42,6 +42,14 @@ export const MainMenu = [
     level: 2,
   },
   {
+    name: "All Users",
+    action: "/admin/users",
+    key: "allusers",
+    toolTip: "All Users",
+    routeIcon: `${AllIcons.users}`,
+    level: 3,
+  },
+  {
     name: "Add Faculty",
     action: "/admin/faculty/new",
     key: "facultyadd",
@@ -49,34 +57,4 @@ export const MainMenu = [
     routeIcon: `${AllIcons.userplus}`,
     level: 3,
   },
-  {
-    name: "Edit Faculty",
-    action: "/admin/pass/edit",
-    key: "facultyedit",
-    toolTip: "Edit Password",
-    routeIcon: `${AllIcons.reports}`,
-    level: 3,
-  }, /*
-  {
-    name: "Strategies",
-    action: "/dashboard/strategies",
-    key: "strats",
-    toolTip: "Strategies",
-    routeIcon: `${AllIcons.strategies}`,
-  },
-  {
-    name: "Services",
-    action: "/dashboard/services",
-    key: "services",
-    toolTip: "Services",
-    routeIcon: `${AllIcons.services}`,
-  },
-  {
-    name: "Subscription",
-    action: "/dashboard/subscription",
-    key: "subscription",
-    toolTip: "Subscription",
-    routeIcon: `${AllIcons.subscription}`,
-  },
-  */
 ];
