@@ -9,7 +9,7 @@
 
                     <div class="text-base sm:text-xl lg:text-2xl font-semibold">{{ mentee.name }} #{{ mentee.register_number }}</div>
                     <div class="py-2">
-                        <a :href="`/dashboard/mentees/${mentee.register_number}`"
+                        <a :href="`/dashboard/mentees/${mentee.register_number}/meetings`"
                             class="flex items-center gap-2 max-w-xs mx-auto bg-nitMaroon-700 rounded-md py-2 px-4">
                             <span class="text-rose-200 text-xs sm:text-base">Check Meeting
                                 Details</span>
