@@ -109,7 +109,7 @@ const handleSubmit = async (e: Event) => {
             message.value.text = "Updated meeting info."
             const i = meetings.value.findIndex(x => x.id ===  currentMeeting.value)
             meetings.value[i].date = new Date(String(creds.date));
-            meetings.value[i].discussion = creds.discussion;
+            meetings.value[i].discussion = String(creds.discussion);
         },
         onResponseError({ request, response, options }) {
             message.value.type = "error"
