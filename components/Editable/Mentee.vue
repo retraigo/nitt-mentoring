@@ -3,11 +3,12 @@
         <div class="p-2 rounded-xl items-center flex justify-between bg-nitMaroon-100">
             <div class="flex items-center gap-8">
                 <div class="flex flex-col items-stretch gap-2" title="Allow Editing">
-                    <MiscSwitch :turned-on="mentee.enable_edit_profile" />
+                    <MiscSwitch :turned-on="mentee.enable_edit_profile ?? true" @update="toggleEditProfile" />
                 </div>
                 <div class="flex flex-col items-start gap-2">
 
-                    <div class="text-base sm:text-xl lg:text-2xl font-semibold">{{ mentee.name }} #{{ mentee.register_number }}</div>
+                    <div class="text-base sm:text-xl lg:text-2xl font-semibold">{{ mentee.name }} #{{ mentee.register_number
+                    }}</div>
                     <div class="py-2">
                         <a :href="`/dashboard/mentees/${mentee.register_number}/meetings`"
                             class="flex items-center gap-2 max-w-xs mx-auto bg-nitMaroon-700 rounded-md py-2 px-4">
@@ -269,6 +270,21 @@ const updateSpecial = async (e: Event) => {
                     specialMessage.value.text = "An unknown error occurred";
                     break;
             }
+        }
+    })
+};
+
+const toggleEditProfile = async (val: boolean) => {
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    console.log(val)
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/editable`, {
+        method: "PATCH", body: JSON.stringify({ value: val }),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+        },
+        onResponseError({ request, response, options }) {
+            alert(`Unable to toggle editing. Error ${response.status} with ${response.statusText}`)
         }
     })
 };
