@@ -28,8 +28,7 @@
                 <div class="flex flex-row items-center gap-2">
                     <input name="batch" type="number" class="p-2 w-full rounded-md shadow-md" placeholder="Batch" />
                     <input name="year" type="number" class="p-2 w-full rounded-md shadow-md" placeholder="Year" />
-                    <input name="section" type="text" class="p-2 w-full rounded-md shadow-md"
-                        placeholder="Section" />
+                    <input name="section" type="text" class="p-2 w-full rounded-md shadow-md" placeholder="Section" />
                 </div>
                 <div class="flex flex-col items-center gap-2">
                     <label htmlFor="dept_field" class="w-full text-start">
@@ -50,11 +49,61 @@
                 </button>
             </form>
             <hr class="border border-stone-400 w-full lg:w-96" />
+            <input type="file" accept=".xlsx ,.xls" ref="fileInput" @change="handleFileChange" />
+            <button @click="uploadFile" class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">Upload Excel File</button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { read, utils } from 'xlsx';
+
+interface studentData {
+    name: string;
+    regno: number;
+    password: string;
+    department: string;
+    batch: number;
+    year: number;
+    section: string;
+}
+
+const stud = ref<studentData[]>([]);
+
+const handleFileUpload = (file: File) => {
+    const reader = new FileReader();
+
+    reader.onload = async () => {
+        const arrayBuffer = reader.result as ArrayBuffer;
+        const wb = read(arrayBuffer);
+
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data: studentData[] = utils.sheet_to_json<studentData>(ws);
+
+        stud.value = data;
+
+        // console.log(stud.value);
+    };
+
+    reader.readAsArrayBuffer(file);
+};
+
+const handleFileChange = (event: Event) => {
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+    if (selectedFile) {
+        handleFileUpload(selectedFile);
+    }
+};
+
+const uploadFile = () => {
+    stud.value.forEach((element) => {
+        console.log(JSON.stringify(element));
+    })
+}
+
+
 definePageMeta({
     middleware: "level2"
 })
@@ -77,6 +126,7 @@ const handleSubmit = async (e: Event) => {
         year: Number(formData.get("year")),
         section: formData.get("section"),
     };
+    console.log(JSON.stringify(creds))
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
     await useFetch<{ token: string }>(`/api/mentees/new`, {
