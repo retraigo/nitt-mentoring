@@ -50,18 +50,20 @@
             </form>
             <hr class="border border-stone-400 w-full lg:w-96" />
             <input type="file" accept=".xlsx ,.xls" ref="fileInput" @change="handleFileChange" />
-            <button @click="uploadFile" class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">Upload Excel File</button>
+            <button @click="uploadFile"
+                class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">Upload
+                Excel File</button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { read, utils } from 'xlsx';
 
 interface studentData {
     name: string;
-    regno: number;
+    regno: string;
     password: string;
     department: string;
     batch: number;
@@ -81,6 +83,10 @@ const handleFileUpload = (file: File) => {
         const ws = wb.Sheets[wb.SheetNames[0]];
         const data: studentData[] = utils.sheet_to_json<studentData>(ws);
 
+        data.forEach((element) => {
+            element.regno = element.regno.toString();
+        });
+
         stud.value = data;
 
         // console.log(stud.value);
@@ -97,9 +103,42 @@ const handleFileChange = (event: Event) => {
     }
 };
 
-const uploadFile = () => {
-    stud.value.forEach((element) => {
-        console.log(JSON.stringify(element));
+const uploadFile = async (e: Event) => {
+    e.preventDefault();
+
+    stud.value.forEach(async (element) => {
+        // console.log(element);
+        await upload(element);
+    })
+}
+
+
+async function upload(record: studentData) {
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    await useFetch<{ token: string }>(`/api/mentees/new`, {
+        method: "POST", body: JSON.stringify(record),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            message.value.type = "info"
+            message.value.text = "Created user."
+        },
+        onResponseError({ request, response, options }) {
+            message.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    message.value.text = "Missing Fields."
+                case 401:
+                    message.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    message.value.text = "An unknown error occurred";
+                    break;
+            }
+            abortNavigation()
+
+        }
     })
 }
 
@@ -126,7 +165,7 @@ const handleSubmit = async (e: Event) => {
         year: Number(formData.get("year")),
         section: formData.get("section"),
     };
-    console.log(JSON.stringify(creds))
+    console.log(creds);
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
     await useFetch<{ token: string }>(`/api/mentees/new`, {
