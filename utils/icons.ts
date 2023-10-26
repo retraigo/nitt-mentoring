@@ -18,4 +18,5 @@ export const AllIcons: Record<string, string> = {
   userplus:
     "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M 9 7 m 4 0 a 4 4 0 1 0 -8 0 a 4 4 0 1 0 8 0 M 20 8 L 20 14 M 23 11 L 17 11",
   book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z",
+  
 };
