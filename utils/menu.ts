@@ -18,6 +18,14 @@ export const MainMenu = [
     level: 1,
   },
   {
+    name: "Change Password",
+    action: "/dashboard/password",
+    key: "change-password",
+    toolTip: "Change Password",
+    routeIcon: `${AllIcons.passwordChange}`,
+    level: 1,
+  },
+  {
     name: "Faculty List",
     action: "/hod/faculty",
     key: "faculty",
