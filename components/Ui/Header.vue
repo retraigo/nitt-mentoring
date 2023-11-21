@@ -15,7 +15,7 @@
                 }`">
                 <div v-if="userStore.loggedIn" class="flex flex-col gap-8">
                     <div class="mt-8" />
-                    <a v-for="route in MainMenu.filter(x => x.level <= userStore.level && (userStore.level === 3 ? x.level === 3 : true))" :href="route.action"
+                    <a v-for="route in MainMenu.filter(x => x.level <= userStore.level && (userStore.level === 3 ? x.level === 3 : true) &&(x.key=='mentees'?userStore.level==1:true))" :href="route.action"
                         :key="route.key"
                         :class="`flex flex-row items-center gap-2 transition duration-200 ease-in-out border-b-2 border-transparent ${navState ? `hover:border-nitMaroon-300` : `justify-center w-full`}`"
                         :title="route.toolTip">
