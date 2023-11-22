@@ -61,10 +61,12 @@ const handleSubmit = async (e: Event) => {
         method: "POST", body: JSON.stringify(creds),
         onResponse({ request, response, options }) {
             // Set localStorage value and redirect to where they were
-            token.value = response._data.token
-            message.value.type = "info"
-            message.value.text = "Logging you in."
-            navigateTo(redirect)
+            if(response._data.message!='Error'){
+                token.value = response._data.token
+                message.value.type = "info"
+                message.value.text = "Logging you in."
+                navigateTo(redirect)
+            }
         },
         onResponseError({ request, response, options }) {
             message.value.type="error"
