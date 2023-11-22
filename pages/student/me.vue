@@ -298,7 +298,8 @@ const updatePersonal = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
-    await useFetch<{ token: string }>(`/api/students/me/basic`, {
+    console.log(JSON.stringify(data))
+    await useFetch<{ token: string }>(`/api/students/me/personal`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
@@ -378,20 +379,20 @@ const updateMother = async (e: Event) => {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            fatherMessage.value.type = "success"
-            fatherMessage.value.text = "Updated details."
+            motherMessage.value.type = "success"
+            motherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
-            fatherMessage.value.type = "error"
+            motherMessage.value.type = "error"
             switch (response.status) {
-                case 400:
+                case 400:   
                     // this won't happen
-                    fatherMessage.value.text = "Missing Fields."
+                    motherMessage.value.text = "Missing Fields."
                 case 401:
-                    fatherMessage.value.text = "You aren't supposed to be here."
+                    motherMessage.value.text = "You aren't supposed to be here."
                     break;
                 default:
-                    fatherMessage.value.text = "An unknown error occurred";
+                    motherMessage.value.text = "An unknown error occurred";
                     break;
             }
         }
