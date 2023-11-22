@@ -32,7 +32,7 @@ model faculty {
     meetings      meetings[]
 }
 
-model students {
+model students{
     id          Int    @id @default(autoincrement())
     user        users  @relation(references: [id], fields: [user_id])
     user_id     Int    @unique

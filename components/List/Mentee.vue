@@ -12,9 +12,12 @@
                     <input type="text" id="search_field" v-model="classSection"
                         class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
                         placeholder="Section" />
-                    <input type="text" id="search_field" v-model="search"
-                        class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
-                        placeholder="Name / #Reg No." />
+                    <input type="text" id="search_field" v-model="name"
+                    class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                    placeholder="Name" />
+                    <input type="text" id="search_field" v-model="regNo"
+                    class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                    placeholder="Reg No" />
                 </div>
             </div>
         </div>
@@ -22,7 +25,9 @@
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Reg #</th>
                 <th>Name</th>
-                <th>Year & Section</th>
+                <th>Year</th>
+                <th>Section</th>
+                <th>Batch</th>
                 <th v-if="mentees[0]?.mentor">Mentor</th>
                 <th>Meetings</th>
             </thead>
@@ -31,7 +36,9 @@
                     class="text-xs lg:text-base text-center odd:bg-nitMaroon-100 even:bg-zinc-100 border-t border-nitMaroon-100 border-spacing-y-2">
                     <td>{{ mentee.register_number }}</td>
                     <td>{{ mentee.name }}</td>
-                    <td>{{ mentee.year }} - {{ mentee.section }}</td>
+                    <td>{{ mentee.year}}</td>
+                    <td>{{ mentee.section }}</td>
+                    <td>{{ mentee.batch }}</td>
                     <td v-if="mentee.mentor">{{ mentee.mentor.name }}</td>
                     <td>
                         <a :href="`/dashboard/mentees/${mentee.register_number}`"> <span class="sr-only">Check Meeting
@@ -58,14 +65,17 @@ const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :
         mentees.filter(x => {
             return (
-                (search.value.startsWith("#") ? x.register_number.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
-                (batch.value ? x.batch === Number(batch.value) : true) &&
-                (classSection.value ? x.section === classSection.value : true)
+               
+                (batch.value ? x.batch.toString().startsWith(batch.value) : true) &&
+                (classSection.value ? x.section === classSection.value.toUpperCase() : true)&&
+                (name.value ? x.name.toLowerCase().includes(name.value.toLowerCase()):true) &&
+                (regNo.value ? x.register_number.startsWith(regNo.value):true)
             )
         })
 })
 
-const search = ref("")
+const name=ref("")
+const regNo=ref("")
 const batch = ref("")
 const classSection = ref("")
 const expandFilter = ref(false)

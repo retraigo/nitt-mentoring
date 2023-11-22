@@ -13,10 +13,15 @@
                     <input type="text" id="search_field" v-model="classSection"
                         class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
                         placeholder="Section" />
-                    <input type="text" id="search_field" v-model="search"
+                    <input type="text" id="search_field" v-model="name"
                         class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
-                        placeholder="Name / #Reg No." />
+                        placeholder="Name" />
+                    <input type="text" id="search_field" v-model="regNo"
+                    class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                    placeholder="Reg No" />
                 </div>
+                
+               
             </div>
         </div>
         <div class="flex flex-col space-y-4">
@@ -37,15 +42,19 @@ const computedMentees = computed(() => {
     return !expandFilter.value ? mentees :
         mentees.filter(x => {
             return (
-                (search.value.startsWith("#") ? x.register_number.startsWith(search.value.slice(1)) : x.name.toLowerCase().includes(search.value.toLowerCase())) &&
-                (batch.value ? x.batch === Number(batch.value) : true) &&
-                (classSection.value ? x.section === classSection.value : true)
+               
+                (batch.value ? x.batch.toString().startsWith(batch.value) : true) &&
+                (classSection.value ? x.section === classSection.value.toUpperCase() : true)&&
+                (name.value ? x.name.toLowerCase().includes(name.value.toLowerCase()):true) &&
+                (regNo.value ? x.register_number.startsWith(regNo.value):true)
             )
         })
 })
 
-const search = ref("")
+
 const batch = ref("")
+const name=ref("")
+const regNo=ref("")
 const classSection = ref("")
 const expandFilter = ref(false)
 </script>
