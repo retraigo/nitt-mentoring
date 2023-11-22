@@ -4,6 +4,23 @@
             :class="`bg-nitMaroon-100/50 flex flex-col space-y-4 ${mentee.enable_edit_profile ? `` : `cursor-not-allowed`}`">
             <div :class="`p-2 ${mentee.enable_edit_profile ? `` : `pointer-events-none`}`">
                 <!-- BASIC STUDENT INFO -->
+                <div class="flex flex-col items-center justify-center gap-4 mt-5 ml-2 mx-auto font-bold text-xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 max-w-6xl mx-auto">
+                        <div class="grid grid-cols-2 items-center">
+                            Name: &nbsp; {{ mentee.name }}
+                        </div>
+                       
+                        <div class="grid grid-cols-2 items-center ml-10">
+                            Mentor: &nbsp; {{ mentee.mentor.name }}
+                        </div>
+
+                        <div class="grid grid-cols-2 items-center ">
+                            Roll No: &nbsp; {{ mentee.register_number }}
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
+
                 <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Basic Info</h2>
                 <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updateBasic(e)">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
@@ -29,7 +46,7 @@
                         {{ basicMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Basic Info
+                        Update Basic Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -76,7 +93,7 @@
                         {{ personalMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Personal Info
+                        Update Personal Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -122,7 +139,7 @@
                         {{ fatherMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Father Info
+                        Update Father Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -167,7 +184,7 @@
                         {{ motherMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Mother Info
+                        Update Mother Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" /> <!-- SPECIAL ACHIEVEMENT INFO -->
@@ -188,7 +205,7 @@
                         {{ specialMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Special Info
+                        Update Special Info
                     </button>
                 </form>
             </div>
@@ -206,6 +223,7 @@ definePageMeta({
 const user = await useUserStore()
 
 const mentee = user.level === 0 ? user.student : false
+console.log(mentee)
 
 if (!mentee) navigateTo("/login")
 
