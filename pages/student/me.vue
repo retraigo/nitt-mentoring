@@ -223,7 +223,7 @@ definePageMeta({
 const user = await useUserStore()
 
 const mentee = user.level === 0 ? user.student : false
-console.log(mentee)
+const tempMentee = mentee;
 
 if (!mentee) navigateTo("/login")
 
@@ -243,6 +243,7 @@ const updateSpecial = async (e: Event) => {
     }
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.achievements=creds
     await useFetch<{ token: string }>(`/api/students/me/special`, {
         method: "PATCH", body: JSON.stringify(creds),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -252,6 +253,7 @@ const updateSpecial = async (e: Event) => {
         },
         onResponseError({ request, response, options }) {
             specialMessage.value.type = "error"
+            mentee.achievements=tempMentee.achievements
             switch (response.status) {
                 case 400:
                     // this won't happen
@@ -278,6 +280,9 @@ const updateBasic = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.year=data.year
+    mentee.batch=data.batch
+    mentee.section=data.section
     await useFetch<{ token: string }>(`/api/students/me/basic`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -286,6 +291,9 @@ const updateBasic = async (e: Event) => {
             basicMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.year=tempMentee.year
+            mentee.batch=tempMentee.batch
+            mentee.section=tempMentee.section
             basicMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -316,7 +324,7 @@ const updatePersonal = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
-    console.log(JSON.stringify(data))
+    mentee.personal_info=data
     await useFetch<{ token: string }>(`/api/students/me/personal`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -325,6 +333,7 @@ const updatePersonal = async (e: Event) => {
             personalMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info=tempMentee.personal_info
             personalMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -355,6 +364,7 @@ const updateFather = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.father=data
     await useFetch<{ token: string }>(`/api/students/me/father`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -363,6 +373,7 @@ const updateFather = async (e: Event) => {
             fatherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info.father=tempMentee.personal_info.father
             fatherMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -393,6 +404,7 @@ const updateMother = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.mother=data
     await useFetch<{ token: string }>(`/api/students/me/mother`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -401,6 +413,7 @@ const updateMother = async (e: Event) => {
             motherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info.mother=tempMentee.personal_info.mother
             motherMessage.value.type = "error"
             switch (response.status) {
                 case 400:   
