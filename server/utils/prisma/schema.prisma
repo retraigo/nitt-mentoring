@@ -32,13 +32,13 @@ model faculty {
     meetings      meetings[]
 }
 
-model students {
+model students{
     id          Int    @id @default(autoincrement())
     user        users  @relation(references: [id], fields: [user_id])
     user_id     Int    @unique
     register_no String @unique
     name        String
-    year        Int
+    year        String
     section     String
     batch       Int
 
@@ -110,7 +110,7 @@ model students {
 model academics {
     id                   Int      @id @default(autoincrement())
     student              students @relation(references: [register_no], fields: [register_no])
-    year                 Int
+    year                 String
     register_no          String
     special              String?
     academics            String?
