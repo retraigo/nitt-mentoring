@@ -166,7 +166,7 @@ model meetings {
     discussion String
     mentee     students @relation(references: [register_no], fields: [mentee_id])
     mentee_id  String
-    mentor     faculty  @relation(references: [user_id], fields: [mentor_id])
+    mentor     faculty  @relation(references: [id], fields: [mentor_id])
     mentor_id  Int
 }
 
