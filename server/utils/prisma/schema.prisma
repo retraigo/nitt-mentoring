@@ -1,5 +1,5 @@
 datasource db {
-    provider = "postgresql"
+    provider = "mysql"
     url      = env("DATABASE_URL")
 }
 
@@ -38,7 +38,7 @@ model students{
     user_id     Int    @unique
     register_no String @unique
     name        String
-    year        Int
+    year        String
     section     String
     batch       Int
 
@@ -110,7 +110,7 @@ model students{
 model academics {
     id                   Int      @id @default(autoincrement())
     student              students @relation(references: [register_no], fields: [register_no])
-    year                 Int
+    year                 String
     register_no          String
     special              String?
     academics            String?
