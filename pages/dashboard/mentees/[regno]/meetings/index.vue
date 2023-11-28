@@ -15,24 +15,36 @@
                 class="text-start bg-zinc-100 rounded-md p-2 block w-full">
                 <li class="font-bold">Meeting #{{ i+1 }}</li>
                 <li class="font-semibold text-xs">{{ new Date(meeting.date).toISOString().split("T")[0].split("-").reverse().join("/") }}</li>
-                <li>{{ meeting.discussion }}</li>
+                <li>{{ meeting.discussion.length > 40 ? meeting.discussion.slice(0, meeting.discussion.lastIndexOf(' ', 40)) + " ....." : meeting.discussion }}</li>
                 <li>
-                    <button @click="_ => setMeeting(meeting.id)" class="mx-auto flex items-center justify-center">
-                        <span class="sr-only">Edit Info</span>
+                  <div class=" flex  ">
+                         <button @click="_ => setMeeting(meeting.id)" class=" mx-auto flex flex-row items-center justify-start gap-2">
+                        <span class="text-rose-700">Edit</span>
                         <svg class="block w-5 h-5 stroke-2 stroke-rose-700 mx-auto" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <path class="transition-all duration-500 transform ease-in-out" stroke-linecap="round"
                                 stroke-linejoin="round" :d="`${AllIcons.services}`" />
                         </svg>
                     </button>
+                    
+                    <button @click="_ => setView(meeting.id)" class=" mx-auto flex flex-row items-center justify-start gap-2"><span class="text-rose-700">View</span>
+                        <svg class="block w-5 h-5 stroke-2 stroke-rose-700" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" aria-hidden="true">
+                            <path class="transition-all duration-500 transform ease-in-out" stroke-linecap="round"
+                                stroke-linejoin="round" :d="`${AllIcons.reports}`" />
+                        </svg>
+                    </button>
+                </div>
                 </li>
+                  
+                   
             </ul>
         </div>
         <div v-if="!meetings.length">No past meetings</div>
         <div
             :class="`${modelOpen ? `visible` : `invisible`} rounded-xl w-full md:max-w-2xl bg-white fixed z-50 p-4 flex flex-col items-center`">
             <div class="flex justify-between w-full">
-                <div>Editing Details For {{ meetings.length - meetings.findIndex(x => x.id ===  currentMeeting) }}</div>
+                <div>Editing Details For {{ meetings.findIndex(x => x.id ===  currentMeeting) + 1}}</div>
                 <button class="self-end" @click="_ => modelOpen = false">
                     X
                 </button>
@@ -52,7 +64,33 @@
                 </button>
             </form>
         </div>
-        <div :class="`${modelOpen ? `visible` : `invisible`} bg-black/40 backdrop-blur-md inset-0 w-full fixed z-40`">
+
+        
+        <div
+            :class="`${viewOpen ? `visible` : `invisible`} rounded-xl w-full md:max-w-2xl bg-white fixed z-50 p-4 flex flex-col items-center`">
+            <div class="flex justify-between w-full">
+                <div>Viewing Details For {{ meetings.length - meetings.findIndex(x => x.id ===  currentMeeting) }}</div>
+                <button class="self-end" @click="_ => viewOpen = false">
+                    X
+                </button>
+            </div>
+            <div class="flex flex-col items-center gap-4 pt-8">
+                <h2 class="text-xl font-bold">Date:</h2>
+                <div class="p-2 rounded-md w-48 lg:w-72 shadow-md">
+                    {{ meetings.find(x => x.id ===  currentMeeting)?.date.toISOString().split(`T`)[0] }}
+                </div>
+                <h2 class="text-xl font-bold">Discussion:</h2>
+                <div class="p-2 rounded-md w-48 overflow-auto lg:w-72 shadow-md  ">
+                    {{ meetings.find(x => x.id ===  currentMeeting)?.discussion }}
+                </div>
+                <MiscMessage
+                    :class="`${message.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                    :type="message.type">
+                    {{ message.text }}</MiscMessage>
+               
+            </div>
+        </div>
+        <div :class="`${viewOpen ? `visible` : `invisible`} bg-black/40 backdrop-blur-md inset-0 w-full fixed z-40`">
         </div>
     </div>
 </template>
@@ -84,10 +122,15 @@ if (!mentee) {
 
 const message = ref({ type: "error", text: "" })
 const modelOpen = ref(false);
+const viewOpen = ref(false);
 const currentMeeting = ref(-1)
 const setMeeting = (meetingId: number) => {
     currentMeeting.value = meetingId;
     modelOpen.value = true;
+}
+const setView = (meetingId: number) => {
+    currentMeeting.value = meetingId;
+    viewOpen.value = true;
 }
 
 
