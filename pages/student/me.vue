@@ -4,6 +4,23 @@
             :class="`bg-nitMaroon-100/50 flex flex-col space-y-4 ${mentee.enable_edit_profile ? `` : `cursor-not-allowed`}`">
             <div :class="`p-2 ${mentee.enable_edit_profile ? `` : `pointer-events-none`}`">
                 <!-- BASIC STUDENT INFO -->
+                <div class="flex flex-col items-center justify-center gap-4 mt-5 ml-2 mx-auto font-bold text-xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 max-w-6xl mx-auto">
+                        <div class="grid grid-cols-2 items-center">
+                            Name: &nbsp; {{ mentee.name }}
+                        </div>
+                       
+                        <div class="grid grid-cols-2 items-center ml-10">
+                            Mentor: &nbsp; {{ mentee.mentor.name }}
+                        </div>
+
+                        <div class="grid grid-cols-2 items-center ">
+                            Roll No: &nbsp; {{ mentee.register_number }}
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
+
                 <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Basic Info</h2>
                 <form class="flex flex-col items-center gap-4 mt-5 max-w-3xl mx-auto" @submit="e => updateBasic(e)">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
@@ -29,7 +46,7 @@
                         {{ basicMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Basic Info
+                        Update Basic Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -76,7 +93,7 @@
                         {{ personalMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Personal Info
+                        Update Personal Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -122,7 +139,7 @@
                         {{ fatherMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Father Info
+                        Update Father Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" />
@@ -167,7 +184,7 @@
                         {{ motherMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Mother Info
+                        Update Mother Info
                     </button>
                 </form>
                 <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" /> <!-- SPECIAL ACHIEVEMENT INFO -->
@@ -188,7 +205,7 @@
                         {{ specialMessage.text }}</MiscMessage>
                     <button type="submit" :disabled="!mentee.enable_edit_profile"
                         class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
-                        Edit Special Info
+                        Update Special Info
                     </button>
                 </form>
             </div>
@@ -206,6 +223,7 @@ definePageMeta({
 const user = await useUserStore()
 
 const mentee = user.level === 0 ? user.student : false
+const tempMentee = mentee;
 
 if (!mentee) navigateTo("/login")
 
@@ -225,6 +243,7 @@ const updateSpecial = async (e: Event) => {
     }
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.achievements=creds
     await useFetch<{ token: string }>(`/api/students/me/special`, {
         method: "PATCH", body: JSON.stringify(creds),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -234,6 +253,7 @@ const updateSpecial = async (e: Event) => {
         },
         onResponseError({ request, response, options }) {
             specialMessage.value.type = "error"
+            mentee.achievements=tempMentee.achievements
             switch (response.status) {
                 case 400:
                     // this won't happen
@@ -260,6 +280,9 @@ const updateBasic = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.year=data.year
+    mentee.batch=data.batch
+    mentee.section=data.section
     await useFetch<{ token: string }>(`/api/students/me/basic`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -268,6 +291,9 @@ const updateBasic = async (e: Event) => {
             basicMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.year=tempMentee.year
+            mentee.batch=tempMentee.batch
+            mentee.section=tempMentee.section
             basicMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -298,7 +324,8 @@ const updatePersonal = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
-    await useFetch<{ token: string }>(`/api/students/me/basic`, {
+    mentee.personal_info=data
+    await useFetch<{ token: string }>(`/api/students/me/personal`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
@@ -306,6 +333,7 @@ const updatePersonal = async (e: Event) => {
             personalMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info=tempMentee.personal_info
             personalMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -336,6 +364,7 @@ const updateFather = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.father=data
     await useFetch<{ token: string }>(`/api/students/me/father`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -344,6 +373,7 @@ const updateFather = async (e: Event) => {
             fatherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info.father=tempMentee.personal_info.father
             fatherMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -374,24 +404,26 @@ const updateMother = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.mother=data
     await useFetch<{ token: string }>(`/api/students/me/mother`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            fatherMessage.value.type = "success"
-            fatherMessage.value.text = "Updated details."
+            motherMessage.value.type = "success"
+            motherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
-            fatherMessage.value.type = "error"
+            mentee.personal_info.mother=tempMentee.personal_info.mother
+            motherMessage.value.type = "error"
             switch (response.status) {
-                case 400:
+                case 400:   
                     // this won't happen
-                    fatherMessage.value.text = "Missing Fields."
+                    motherMessage.value.text = "Missing Fields."
                 case 401:
-                    fatherMessage.value.text = "You aren't supposed to be here."
+                    motherMessage.value.text = "You aren't supposed to be here."
                     break;
                 default:
-                    fatherMessage.value.text = "An unknown error occurred";
+                    motherMessage.value.text = "An unknown error occurred";
                     break;
             }
         }
