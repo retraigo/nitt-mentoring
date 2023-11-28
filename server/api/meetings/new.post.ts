@@ -13,18 +13,21 @@ export default defineEventHandler(async (e) => {
   } else {
     const token = auth.slice(7);
     const jwtPayload = await verifyJwt(token);
+
     if (!jwtPayload || (Date.now() / 1000) > jwtPayload.exp) {
       throw createError({
         statusCode: 401,
         statusText: "Session expired. Please login again.",
       });
     }
+  
     if (Number(jwtPayload.level) < 1) {
       throw createError({
         statusCode: 401,
         statusText: "You do not have permission.",
       });
     }
+    
     const body = await readBody<{date: Date, discussion: string; mentee_id: string}>(e);
     if (
       ["date", "discussion", "mentee_id"].some((k) => !Object.hasOwn(body, k))
