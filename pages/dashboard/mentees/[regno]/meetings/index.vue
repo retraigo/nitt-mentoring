@@ -13,7 +13,7 @@
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch w-full gap-4 mt-5 pr-4 max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-6xl">
             <ul v-for="meeting, i in meetings" :key="`meeting_${meeting.id}`"
                 class="text-start bg-zinc-100 rounded-md p-2 block w-full">
-                <li class="font-bold">Meeting #{{ meeting.id }}</li>
+                <li class="font-bold">Meeting #{{ i+1 }}</li>
                 <li class="font-semibold text-xs">{{ new Date(meeting.date).toISOString().split("T")[0].split("-").reverse().join("/") }}</li>
                 <li>{{ meeting.discussion }}</li>
                 <li>

@@ -39,9 +39,9 @@ export default defineEventHandler(async (e) => {
     }
     try {
       const user = await client.prisma.faculty.findFirst({
-        where: {id: Number(jwtPayload.id)},
+        where: {user_id: Number(jwtPayload.id)},
       });
-      if(!user) throw "No user found."
+      if(!user) throw "No user found.";    
       await client.prisma.meetings.create({
         data: { date: new Date(body.date), discussion: body.discussion, mentor_id: user.id, mentee_id: body.mentee_id },
       });
