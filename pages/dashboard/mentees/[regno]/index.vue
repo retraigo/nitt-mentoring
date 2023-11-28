@@ -20,16 +20,7 @@
                 <li class="font-bold">Meeting #{{ i+1 }}</li>
                 <li class="font-semibold text-xs">{{ new Date(meeting.date).toISOString().split("T")[0] }}</li>
                 <li>{{ meeting.discussion }}</li>
-                <li>
-                    <a :href="`/dashboard/mentees/${regno}/meetings/${meeting.id}`"
-                        class="flex flex-row items-center justify-start gap-2"><span class="text-rose-700">View</span>
-                        <svg class="block w-5 h-5 stroke-2 stroke-rose-700" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" aria-hidden="true">
-                            <path class="transition-all duration-500 transform ease-in-out" stroke-linecap="round"
-                                stroke-linejoin="round" :d="`${AllIcons.reports}`" />
-                        </svg>
-                    </a>
-                </li>
+               
             </ul>
         </div>
         <div v-if="!meetings.length">No past meetings</div>
