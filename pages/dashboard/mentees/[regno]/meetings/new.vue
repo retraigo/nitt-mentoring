@@ -30,6 +30,7 @@ const addMeeting = async (e: Event) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form as HTMLFormElement);
+   
     const creds = {
         date: formData.get("date_field"),
         discussion: formData.get("discussion_field"),
@@ -39,10 +40,13 @@ const addMeeting = async (e: Event) => {
         method: "POST", body: JSON.stringify(creds),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            navigateTo(`/dashboard/mentees/${regNo}`)
+            navigateTo(`/dashboard/mentees/${regNo}/meetings`)
         },
         onResponseError({ request, response, options }) {
-            alert("An error occurred")
+            alert("An error occurred");
+            console.error(response);
+            
+
         }
     })
 }
