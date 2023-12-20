@@ -27,7 +27,11 @@
                 </div>
                 <div class="flex flex-row items-center gap-2">
                     <input name="batch" type="number" class="p-2 w-full rounded-md shadow-md" placeholder="Batch" />
-                    <input name="year" type="number" class="p-2 w-full rounded-md shadow-md" placeholder="Year" />
+                    <select name="year" class="p-2 w-full rounded-md shadow-md" >
+                        <option value="" hidden >Course</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                    </select>
                     <input name="section" type="text" class="p-2 w-full rounded-md shadow-md" placeholder="Section" />
                 </div>
                 <div class="flex flex-col items-center gap-2">
@@ -67,7 +71,7 @@ interface studentData {
     password: string;
     department: string;
     batch: number;
-    year: number;
+    year: string;
     section: string;
 }
 

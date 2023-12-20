@@ -45,9 +45,14 @@
                                 :value="mentee.batch" />
                         </div>
                         <div class="grid grid-cols-2 items-center max-w-xs">
-                            <label for="student_year">Year</label>
-                            <input type="number" name="student_year" id="student_year" class="font-semibold p-2 w-48"
-                                :value="mentee.year" />
+                            <label for="student_year">Course</label>
+                            <!-- <input type="number" name="student_year" id="student_year" class="font-semibold p-2 w-48"
+                                :value="mentee.year" /> -->
+                                <select name="student_year"  class="font-semibold p-2 w-48" id="student_year"   >
+                                    <option value="" hidden >{{ mentee.year }}</option>
+                                    <option value="UG">UG</option>
+                                    <option value="PG">PG</option>
+                                </select>
                         </div>
                         <div class="grid grid-cols-2 items-center max-w-xs">
                             <label for="student_section">Section</label>
@@ -294,7 +299,7 @@ const updateBasic = async (e: Event) => {
     const form = e.currentTarget;
     const formData = new FormData(form as HTMLFormElement);
     const data: Partial<Student> = {
-        year: Number(formData.get("student_year") as string),
+        year: formData.get("student_year") as string,
         batch: Number(formData.get("student_batch") as string),
         section: formData.get("student_section") as string,
     };
