@@ -25,7 +25,7 @@
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Reg #</th>
                 <th>Name</th>
-                <th>Year</th>
+                <th>Course</th>
                 <th>Section</th>
                 <th>Batch</th>
                 <th v-if="mentees[0]?.mentor">Mentor</th>

@@ -11,7 +11,7 @@
                 <span class="font-semibold">{{ mentee.register_number }}</span>
             </div>
             <div class="grid grid-cols-2 max-w-xs">
-                <span class="uppercase font-bold">Year</span>
+                <span class="uppercase font-bold">Course</span>
                 <span class="font-semibold">{{ mentee.year }}</span>
             </div>
             <div class="grid grid-cols-2 max-w-xs">

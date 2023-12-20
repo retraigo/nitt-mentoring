@@ -11,13 +11,7 @@
                     <input name="name" id="name_field" type="text" placeholder="John Doe"
                         class="p-2 w-full lg:w-96 rounded-md shadow-md" />
                 </div>
-                <div class="flex flex-col items-center gap-2">
-                    <label htmlFor="id_field" class="w-full text-start">
-                        Username
-                    </label>
-                    <input name="faculty_id" id="id_field" type="number" placeholder="123"
-                        class="p-2 w-full lg:w-96 rounded-md shadow-md" />
-                </div>
+
                 <div class="flex flex-col items-center gap-2">
                     <label htmlFor="username_field" class="w-full text-start">
                         Username
