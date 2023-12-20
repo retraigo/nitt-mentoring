@@ -235,6 +235,7 @@
 <script setup lang="ts">
 import type { Student } from "@/types/types.js"
 const { mentee } = defineProps<{ mentee: Student }>()
+const tempMentee=mentee
 const editOpen = ref(false)
 
 const specialMessage = ref({ type: "error", text: "" })
@@ -255,6 +256,7 @@ const updateSpecial = async (e: Event) => {
     }
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.achievements=creds
     await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/special`, {
         method: "PATCH", body: JSON.stringify(creds),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -263,6 +265,7 @@ const updateSpecial = async (e: Event) => {
             specialMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.achievements=tempMentee.achievements
             specialMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -305,6 +308,15 @@ const updateBasic = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+   if(data.year){
+       mentee.year=data.year
+   }
+   if(data.batch){
+       mentee.batch=data.batch
+   }
+   if(data.section){
+       mentee.section=data.section
+   }
     await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/basic`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -313,6 +325,9 @@ const updateBasic = async (e: Event) => {
             basicMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.year=tempMentee.year
+            mentee.batch=tempMentee.batch
+            mentee.section=tempMentee.section
             basicMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -343,7 +358,8 @@ const updatePersonal = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
-    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/basic`, {
+    mentee.personal_info=data
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/personal`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
@@ -351,6 +367,7 @@ const updatePersonal = async (e: Event) => {
             personalMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info=tempMentee.personal_info
             personalMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -381,6 +398,7 @@ const updateFather = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.father=data
     await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/father`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
@@ -389,6 +407,7 @@ const updateFather = async (e: Event) => {
             fatherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
+            mentee.personal_info.father=tempMentee.personal_info.father
             fatherMessage.value.type = "error"
             switch (response.status) {
                 case 400:
@@ -419,24 +438,26 @@ const updateMother = async (e: Event) => {
     };
     const auth = useCookie<string>("nitt_token");
     if (!auth.value) return false;
+    mentee.personal_info.mother=data
     await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/mother`, {
         method: "PATCH", body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${auth.value}` },
         onResponse({ request, response, options }) {
-            fatherMessage.value.type = "success"
-            fatherMessage.value.text = "Updated details."
+            motherMessage.value.type = "success"
+            motherMessage.value.text = "Updated details."
         },
         onResponseError({ request, response, options }) {
-            fatherMessage.value.type = "error"
+            mentee.personal_info.mother=tempMentee.personal_info.mother
+            motherMessage.value.type = "error"
             switch (response.status) {
                 case 400:
                     // this won't happen
-                    fatherMessage.value.text = "Missing Fields."
+                    motherMessage.value.text = "Missing Fields."
                 case 401:
-                    fatherMessage.value.text = "You aren't supposed to be here."
+                    motherMessage.value.text = "You aren't supposed to be here."
                     break;
                 default:
-                    fatherMessage.value.text = "An unknown error occurred";
+                    motherMessage.value.text = "An unknown error occurred";
                     break;
             }
         }

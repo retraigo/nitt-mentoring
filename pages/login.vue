@@ -48,6 +48,20 @@ let redirect = route.query.redirect as string;
 if (!redirect) redirect = "/dashboard"
 
 const message = ref({ type: "error", text: "" })
+//If there was an error during login 
+let loginerr = route.query.loginerr as string;
+if(loginerr){
+    message.value.type="error"
+    if(loginerr=='missing'){
+        message.value.text = "Missing Fields."
+    }else if(loginerr=='incorrect'){
+        message.value.text = "Username / Password combination is incorrect."
+    }else if(loginerr=='noUser'){
+        message.value.text = "No such user exists."
+    }else if(loginerr='unknown'){
+        message.value.text = "An unknown error occurred";
+    }
+}
 
 const handleSubmit = async (e: Event) => {
     e.preventDefault();
@@ -61,25 +75,28 @@ const handleSubmit = async (e: Event) => {
         method: "POST", body: JSON.stringify(creds),
         onResponse({ request, response, options }) {
             // Set localStorage value and redirect to where they were
-            token.value = response._data.token
-            message.value.type = "info"
-            message.value.text = "Logging you in."
-            navigateTo(redirect)
+            if(response._data.message!='Error'){
+                token.value = response._data.token
+                message.value.type = "info"
+                message.value.text = "Logging you in."
+                navigateTo(redirect)
+            }
         },
         onResponseError({ request, response, options }) {
             message.value.type="error"
             switch (response.status) {
                 case 400:
                     // this won't happen
-                    message.value.text = "Missing Fields."
+                    navigateTo('/?loginerr=missing')
+                    break;
                 case 401:
-                    message.value.text = "Username / Password combination is incorrect."
+                    navigateTo('/?loginerr=incorrect')
                     break;
                 case 404:
-                    message.value.text = "No such user exists."
+                    navigateTo('/?loginerr=noUser')
                     break;
                 default:
-                    message.value.text = "An unknown error occurred";
+                    navigateTo('/?loginerr=unknown')
                     break;
             }
             abortNavigation()
