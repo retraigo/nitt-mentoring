@@ -76,7 +76,7 @@ export type Student = PartialStudent & {
     };
     jee: {
       rank: number;
-      score: string;
+      score: number;
     };
   };
   achievements: Partial<{
