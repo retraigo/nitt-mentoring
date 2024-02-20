@@ -208,6 +208,79 @@
                         Update Special Info
                     </button>
                 </form>
+                <hr class="mt-4 border-1 border-nitMaroon-600 max-w-6xl mx-auto" /> <!-- ACADEMIC INFO -->
+                <h2 class="mt-4 text-2xl font-bold uppercase mx-auto text-center">Academic Qualifications</h2>
+                <form class="flex flex-col items-center gap-4 pt-8" @submit="e => updateAcademic(e)">
+                    <div class="font-bold text-xl uppercase">sslc(10th)</div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_sslc_institution">Institution</label>
+                            <input type="text" name="student_sslc_institution" id="student_sslc_institution"
+                                class="font-semibold p-2 w-72" :value="mentee.past.sslc?.institution" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_sslc_board">Board of Study</label>
+                            <input type="text" name="student_sslc_board" id="student_sslc_board"
+                                class="font-semibold p-2 w-72" :value="mentee.past.sslc?.board_of_study" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_sslc_year">Year(s) of Study</label>
+                            <input type="text" name="student_sslc_year" id="student_sslc_year"
+                                class="font-semibold p-2 w-72" :value="mentee.past.sslc?.year_of_study" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_sslc_cgpa">CGPA / Percentage</label>
+                            <input type="text" name="student_sslc_cgpa" id="student_sslc_cgpa"
+                                class="font-semibold p-2 w-72" :value="mentee.past.sslc?.percentage" />
+                        </div>
+                    </div>
+                    <div class="font-bold text-xl uppercase">hsc(12th)</div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_hsc_institution">Institution</label>
+                            <input type="text" name="student_hsc_institution" id="student_hsc_institution"
+                                class="font-semibold p-2 w-72" :value="mentee.past.hsc?.institution" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_hsc_board">Board of Study</label>
+                            <input type="text" name="student_hsc_board" id="student_hsc_board"
+                                class="font-semibold p-2 w-72" :value="mentee.past.hsc?.board_of_study" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_hsc_year">Year(s) of Study</label>
+                            <input type="text" name="student_hsc_year" id="student_hsc_year"
+                                class="font-semibold p-2 w-72" :value="mentee.past.hsc?.year_of_study" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_hsc_cgpa">CGPA / Percentage</label>
+                            <input type="text" name="student_hsc_cgpa" id="student_hsc_cgpa"
+                                class="font-semibold p-2 w-72" :value="mentee.past.hsc?.percentage" />
+                        </div>
+                    </div>
+                    <div class="font-bold text-xl uppercase">jee</div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_jee_rank">Rank</label>
+                            <input type="text" name="student_jee_rank" id="student_jee_rank"
+                                class="font-semibold p-2 w-60" :value="mentee.past.jee?.rank" />
+                        </div>
+                        <div class="flex flex-col items-center max-w-xs gap-2">
+                            <label for="student_jee_score">Score</label>
+                            <input type="text" name="student_jee_score" id="student_jee_score"
+                                class="font-semibold p-2 w-60" :value="mentee.past.jee?.score" />
+                        </div>
+                    </div>
+                    <MiscMessage
+                        :class="`${academicMessage.text ? `opacity-100` : `opacity-0`} transition duration-500 ease-in-out w-full lg:w-96`"
+                        :type="academicMessage.type">
+                        {{ academicMessage.text }}</MiscMessage>
+                    <button type="submit"
+                        class="rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 bg-nitMaroon-600 text-white py-2 px-8">
+                        Edit Academic Info
+                    </button>
+                </form> 
+
             </div>
         </div>
         <div v-else>Loading...</div>
@@ -232,7 +305,60 @@ const basicMessage = ref({ type: "error", text: "" })
 const personalMessage = ref({ type: "error", text: "" })
 const fatherMessage = ref({ type: "error", text: "" })
 const motherMessage = ref({ type: "error", text: "" })
+const academicMessage = ref({ type: "error", text: "" })
 
+const updateAcademic = async (e: Event) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form as HTMLFormElement);
+    const data: Partial<Student> = {
+        past: {
+        sslc: {
+            institution: formData.get("student_sslc_institution") as string,
+            board_of_study: formData.get("student_sslc_board") as string,
+            year_of_study: formData.get("student_sslc_year") as string,
+            percentage: formData.get("student_sslc_cgpa") as string,
+        },
+        hsc: {
+            institution: formData.get("student_hsc_institution") as string,
+            board_of_study: formData.get("student_hsc_board") as string,
+            year_of_study: formData.get("student_hsc_year") as string,
+            percentage: formData.get("student_hsc_cgpa") as string,
+        },
+        jee: {
+            rank: Number(formData.get("student_jee_rank") as string),
+            score: Number(formData.get("student_jee_score") as string),
+        },
+    },
+        
+    };
+    const auth = useCookie<string>("nitt_token");
+    if (!auth.value) return false;
+    mentee.past=data.past
+    await useFetch<{ token: string }>(`/api/mentees/update/${mentee.register_number}/past`, {
+        method: "PATCH", body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${auth.value}` },
+        onResponse({ request, response, options }) {
+            academicMessage.value.type = "success"
+            academicMessage.value.text = "Updated details."
+        },
+        onResponseError({ request, response, options }) {
+            // mentee.personal_info=tempMentee.personal_info
+            academicMessage.value.type = "error"
+            switch (response.status) {
+                case 400:
+                    // this won't happen
+                    academicMessage.value.text = "Missing Fields."
+                case 401:
+                    academicMessage.value.text = "You aren't supposed to be here."
+                    break;
+                default:
+                    academicMessage.value.text = "An unknown error occurred";
+                    break;
+            }
+        }
+    })
+};
 const updateSpecial = async (e: Event) => {
     e.preventDefault();
     const form = e.currentTarget;

@@ -32,6 +32,7 @@
         <table class="table-auto border-collapse w-full max-w-sm lg:max-w-full">
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Assigned</th>
+                <th>Meetings Details</th>
                 <th>Reg #</th>
                 <th>Name</th>
                 <th>Year</th>
@@ -44,6 +45,7 @@
                     <td><input type="checkbox" :checked="mentee.mentor_id === Number(facultyId)"
                             :disabled="Boolean(mentee.mentor_id && mentee.mentor_id !== -1 && (mentee.mentor_id !== Number(facultyId)))"
                             @change="e => updateMentor(e, mentee.register_number)" /></td>
+                    <td class=" font-bold"><a :href = "`/dashboard/mentees/${mentee.register_number}/meetings`">click here</a></td>
                     <td>{{ mentee.register_number }}</td>
                     <td>{{ mentee.name }}</td>
                     <td>{{ mentee.year }}</td>

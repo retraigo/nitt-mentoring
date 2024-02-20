@@ -10,6 +10,14 @@ export const MainMenu = [
     level: 1,
   },
   {
+    name: "Dashboard",
+    action: "/dashboard/",
+    key: "dashboard",
+    toolTip: "Dashboard",
+    routeIcon: `${AllIcons.home}`,
+    level: 3,
+  },
+  {
     name: "Mentees",
     action: "/dashboard/mentees",
     key: "mentees",

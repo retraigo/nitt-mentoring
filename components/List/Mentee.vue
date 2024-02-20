@@ -7,17 +7,20 @@
                 <div
                     :class="`${expandFilter ? `max-h-[90rem]` : `max-h-0`} flex flex-col lg:flex-row gap-2 overflow-y-hidden transition-all duration-500 ease-in-out`">
                     <input type="text" id="search_field" v-model="batch"
-                        class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                        class="w-48 lg:w-56 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
                         placeholder="Batch" />
+                    <input type="text" id="search_field" v-model="mentor"
+                        class="w-48 lg:w-56 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                        placeholder="Mentor" />    
                     <input type="text" id="search_field" v-model="classSection"
-                        class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                        class="w-48 lg:w-56 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
                         placeholder="Section" />
                     <input type="text" id="search_field" v-model="name"
-                    class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
-                    placeholder="Name" />
+                        class="w-48 lg:w-56 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                        placeholder="Name" />
                     <input type="text" id="search_field" v-model="regNo"
-                    class="w-48 lg:w-72 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
-                    placeholder="Reg No" />
+                        class="w-48 lg:w-56 p-2 rounded-md border-nitMaroon-600 border bg-nitMaroon-50"
+                        placeholder="Reg No" />
                 </div>
             </div>
         </div>
@@ -25,7 +28,7 @@
             <thead class="bg-nitMaroon-600 text-white text-xs lg:text-base">
                 <th>Reg #</th>
                 <th>Name</th>
-                <th>Year</th>
+                <th>Course</th>
                 <th>Section</th>
                 <th>Batch</th>
                 <th v-if="mentees[0]?.mentor">Mentor</th>
@@ -66,6 +69,7 @@ const computedMentees = computed(() => {
         mentees.filter(x => {
             return (
                
+                (mentor.value ? x.mentor?.name.startsWith(mentor.value) : true) &&
                 (batch.value ? x.batch.toString().startsWith(batch.value) : true) &&
                 (classSection.value ? x.section === classSection.value.toUpperCase() : true)&&
                 (name.value ? x.name.toLowerCase().includes(name.value.toLowerCase()):true) &&
@@ -74,6 +78,7 @@ const computedMentees = computed(() => {
         })
 })
 
+const mentor =ref("")
 const name=ref("")
 const regNo=ref("")
 const batch = ref("")
